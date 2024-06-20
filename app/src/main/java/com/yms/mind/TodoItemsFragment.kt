@@ -1,16 +1,18 @@
 package com.yms.mind
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yms.mind.adapters.OnCheckBoxListener
 import com.yms.mind.adapters.TaskAdapater
 import com.yms.mind.data.TodoItemsRepository
+
 
 class TodoItemsFragment : Fragment(), OnCheckBoxListener {
 
@@ -28,7 +30,11 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_todo_items, container, false)
+        val view = inflater.inflate(R.layout.fragment_todo_items, container, false)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
+        setHasOptionsMenu(true)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +44,29 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = TaskAdapater(this)
         setupData()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_menu, menu)
+        val menuVisibilityItem = menu.findItem(R.id.visibility)
+        Log.d("VISIBLE", "$menuVisibilityItem Here")
+        setupMenu(menuVisibilityItem)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun setupMenu(menuVisibilityItem: MenuItem) {
+        var isVisible = true
+        menuVisibilityItem.setOnMenuItemClickListener {
+            Log.d("VISIBLE", "$isVisible")
+            isVisible = if (isVisible) {
+                it.setIcon(R.drawable.ic_visibility_off)
+                false
+            } else {
+                it.setIcon(R.drawable.ic_visibility)
+                true
+            }
+            true
+        }
     }
 
     private fun setupData() {
@@ -51,4 +80,8 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         subtitle.text = getString(R.string.subtitle, repository.getDoneCount())
         setupData()
     }
+    fun showTasks() {
+
+    }
+
 }

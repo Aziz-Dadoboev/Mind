@@ -6,6 +6,6 @@
         android:id="@+id/visibility"
         android:icon="@drawable/ic_visibility"
         app:showAsAction="ifRoom"
-        android:title="" />
+        android:title=""/>
 
 </menu>
