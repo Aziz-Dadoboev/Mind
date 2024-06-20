@@ -1,8 +1,8 @@
 package com.yms.mind.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.yms.mind.data.TodoItem
 import com.yms.mind.databinding.TodoItemBinding
@@ -10,10 +10,10 @@ import com.yms.mind.databinding.TodoItemBinding
 class TaskAdapater : RecyclerView.Adapter<TaskAdapater.TaskViewHolder>() {
 
     var data: List<TodoItem> = emptyList()
-        @SuppressLint("NotifyDataSetChanged")
         set(value) {
+            val diffResult = DiffUtil.calculateDiff(TodoListDiffUtilCallback(field, value))
             field = value
-            notifyDataSetChanged()
+            diffResult.dispatchUpdatesTo(this)
         }
 
     class TaskViewHolder(val binding: TodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
