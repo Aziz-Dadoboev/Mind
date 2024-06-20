@@ -17,6 +17,7 @@
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:title="@string/toolbar_title"
@@ -31,6 +32,7 @@
                 app:layout_collapseMode="pin"/>
 
             <TextView
+                android:id="@+id/tasks_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/demo_subtitle"
