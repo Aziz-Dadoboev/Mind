@@ -20,7 +20,7 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
     private lateinit var adapter: TaskAdapater
     private lateinit var subtitle: TextView
     private lateinit var recyclerView: RecyclerView
-
+    private var isVisible = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         repository = TodoItemsRepository()
@@ -43,7 +43,7 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = TaskAdapater(this)
-        setupData()
+        setupData(isVisible)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -55,22 +55,25 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
     }
 
     private fun setupMenu(menuVisibilityItem: MenuItem) {
-        var isVisible = true
         menuVisibilityItem.setOnMenuItemClickListener {
             Log.d("VISIBLE", "$isVisible")
             isVisible = if (isVisible) {
                 it.setIcon(R.drawable.ic_visibility_off)
+                setupData(false)
                 false
             } else {
                 it.setIcon(R.drawable.ic_visibility)
+                setupData(true)
                 true
             }
             true
         }
     }
 
-    private fun setupData() {
-        adapter.data = repository.getTodoItems()
+    private fun setupData(all: Boolean) {
+        adapter.data =
+            if (all) repository.getTodoItems()
+            else repository.getUndoneTasks()
         recyclerView.adapter = adapter
         subtitle.text = getString(R.string.subtitle, repository.getDoneCount())
     }
@@ -78,10 +81,6 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         val item = adapter.data[position]
         repository.checkItem(item.id, !item.status)
         subtitle.text = getString(R.string.subtitle, repository.getDoneCount())
-        setupData()
+        setupData(isVisible)
     }
-    fun showTasks() {
-
-    }
-
 }
