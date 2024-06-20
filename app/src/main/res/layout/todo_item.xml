@@ -17,6 +17,7 @@
         android:paddingEnd="2dp"
         android:maxLines="3"
         android:ellipsize="end"
+        android:checked="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imageButton"/>

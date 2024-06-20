@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yms.mind.data.TodoItem
 import com.yms.mind.databinding.TodoItemBinding
 
-class TaskAdapater : RecyclerView.Adapter<TaskAdapater.TaskViewHolder>() {
+class TaskAdapater(
+    private val checkBoxClickListener: OnCheckBoxListener
+) : RecyclerView.Adapter<TaskAdapater.TaskViewHolder>() {
 
-    var data: List<TodoItem> = emptyList()
+    var data: List<TodoItem> = mutableListOf()
         set(value) {
             val diffResult = DiffUtil.calculateDiff(TodoListDiffUtilCallback(field, value))
             field = value
@@ -33,6 +35,9 @@ class TaskAdapater : RecyclerView.Adapter<TaskAdapater.TaskViewHolder>() {
         with(holder.binding) {
             checkBox.text = task.text
             checkBox.isChecked = task.status
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                checkBoxClickListener.onCheckBoxClicked(position, isChecked)
+            }
         }
     }
 }
