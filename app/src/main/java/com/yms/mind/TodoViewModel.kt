@@ -48,4 +48,8 @@ class TodoViewModel: ViewModel() {
         repository.deleteItem(todoItemId)
         loadTodoItems()
     }
+
+    fun getItem(todoItemId: String): TodoItem? {
+        return repository.getItem(todoItemId)
+    }
 }

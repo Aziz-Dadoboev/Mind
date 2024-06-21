@@ -25,7 +25,7 @@ class EditTodoItemFragment : Fragment() {
     private lateinit var deadlineSwitch: SwitchMaterial
     private lateinit var deadlineTextView: TextView
     private lateinit var deleteButton: Button
-    private lateinit var todoItemId: String
+    private var todoItemId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
@@ -53,16 +53,36 @@ class EditTodoItemFragment : Fragment() {
         deleteButton = view.findViewById(R.id.delete_button)
 
         importanceTextView.setOnClickListener{ showPopup(it) }
+        deleteButton.setOnClickListener { deleteItem() }
+        setUpSwitch()
+        setUpDataIfGiven()
+
+        return view
+    }
+
+    private fun setUpSwitch() {
+        var isUserClicked = false
+        deadlineSwitch.setOnClickListener {
+            isUserClicked = true
+        }
         deadlineSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+            if (isChecked && isUserClicked) {
                 showDatePicker()
+                isUserClicked = false
             } else {
                 deadlineTextView.text = ""
             }
         }
-        deleteButton.setOnClickListener { deleteItem() }
+    }
 
-        return view
+    private fun setUpDataIfGiven() {
+        val todoItem: TodoItem? = todoItemId?.let { todoViewModel.getItem(it) }
+        if (todoItem != null) {
+            todoText.setText(todoItem.text)
+            importanceTextView.text = getPriorityString(todoItem.priority.toString())
+            deadlineSwitch.isChecked = todoItem.deadline != null
+            deadlineTextView.text = todoItem.deadline
+        }
     }
 
     private fun showDatePicker() {
@@ -95,12 +115,21 @@ class EditTodoItemFragment : Fragment() {
     }
 
     private fun getPriorityId(title: String): Priority {
-        if (title == getString(R.string.importance_no)) {
+        if (title == getString(R.string.importance_low)) {
             return Priority.LOW
-        } else if (title == getString(R.string.importance_low)) {
+        } else if (title == getString(R.string.importance_no)) {
             return Priority.NORMAL
         }
         return Priority.HIGH
+    }
+
+    private fun getPriorityString(priority: String): String {
+        if (priority == "NORMAL") {
+            return "Нет"
+        } else if (priority == "LOW") {
+            return "Низкий"
+        }
+        return "Высокий"
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -138,7 +167,7 @@ class EditTodoItemFragment : Fragment() {
     }
 
     private fun deleteItem() {
-        todoViewModel.deleteItem(todoItemId)
+        todoItemId?.let { todoViewModel.deleteItem(it) }
         requireActivity().supportFragmentManager.popBackStack()
     }
 }
