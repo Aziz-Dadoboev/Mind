@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yms.mind.adapters.OnCheckBoxListener
+import com.yms.mind.adapters.OnItemClickListener
 import com.yms.mind.adapters.TaskAdapter
+import com.yms.mind.data.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class TodoItemsFragment : Fragment(), OnCheckBoxListener {
+class TodoItemsFragment : Fragment(), OnCheckBoxListener, OnItemClickListener {
 
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var adapter: TaskAdapter
@@ -46,7 +48,7 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = TaskAdapter(this)
+        adapter = TaskAdapter(this, this)
         recyclerView.adapter = adapter
 
         lifecycleScope.launch(Dispatchers.Main) {
@@ -91,4 +93,16 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         todoViewModel.checkItem(item.id, !item.status, isVisible)
     }
 
+    override fun onItemClick(todoItem: TodoItem) {
+        val editFragment = EditTodoItemFragment()
+
+        val bundle = Bundle()
+        bundle.putString("todoItem", todoItem.id)
+        editFragment.arguments = bundle
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, editFragment, "EditTodoItemFragment")
+            .addToBackStack(null)
+            .commit()
+    }
 }

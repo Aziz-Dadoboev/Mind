@@ -9,7 +9,8 @@ import com.yms.mind.data.TodoItem
 import com.yms.mind.databinding.TodoItemBinding
 
 class TaskAdapter(
-    private val checkBoxClickListener: OnCheckBoxListener
+    private val checkBoxClickListener: OnCheckBoxListener,
+    private val itemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     var data: List<TodoItem> = mutableListOf()
@@ -35,7 +36,7 @@ class TaskAdapter(
         val task = data[position]
 
         with(holder.binding) {
-            checkBox.text = task.text
+            checkText.text = task.text
             checkBox.isChecked = task.status
             checkBox.setOnCheckedChangeListener(null)
             checkBox.setOnClickListener {
@@ -43,6 +44,10 @@ class TaskAdapter(
             }
             if (task.deadline != null) dateText.text = task.deadline
             else dateText.visibility = View.GONE
+
+            root.setOnClickListener {
+                itemClickListener.onItemClick(task)
+            }
         }
     }
 }

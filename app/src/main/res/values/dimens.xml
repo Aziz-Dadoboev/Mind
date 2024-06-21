@@ -9,4 +9,6 @@
     <dimen name="todo_text_height">100dp</dimen>
     <dimen name="importance_textsize">20sp</dimen>
     <dimen name="item_date_text">50dp</dimen>
+    <dimen name="date_margin_top">6dp</dimen>
+    <dimen name="todo_item_text_size">16sp</dimen>
 </resources>

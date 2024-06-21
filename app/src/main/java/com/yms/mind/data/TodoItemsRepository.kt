@@ -36,6 +36,10 @@ class TodoItemsRepository {
         todoItems[todoItem.id] = todoItem
     }
 
+    fun deleteItem(todoItemId: String) {
+        todoItems.remove(todoItemId)
+    }
+
     fun generateId() : String {
         while (todoItems[uniqueId.toString()] != null) {
             uniqueId++

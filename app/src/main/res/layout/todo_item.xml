@@ -8,26 +8,33 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBox"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/lorem"
-        android:textSize="16sp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="6dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="2dp"
-        android:maxLines="3"
-        android:ellipsize="end"
         android:checked="false"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/check_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/lorem"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/todo_item_text_size"
+        android:maxLines="3"
+        android:maxLength="120"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@+id/checkBox"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imageButton"/>
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintBottom_toTopOf="@+id/date_text"/>
 
     <TextView
         android:id="@+id/date_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="@dimen/item_date_text"
+        android:layout_marginTop="@dimen/date_margin_top"
         tools:text="@string/demo_date_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox"/>

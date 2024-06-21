@@ -25,9 +25,13 @@ class EditTodoItemFragment : Fragment() {
     private lateinit var deadlineSwitch: SwitchMaterial
     private lateinit var deadlineTextView: TextView
     private lateinit var deleteButton: Button
+    private lateinit var todoItemId: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
+        arguments?.getString("todoItem")?.let {
+            todoItemId = it
+        }
     }
 
     override fun onCreateView(
@@ -56,6 +60,7 @@ class EditTodoItemFragment : Fragment() {
                 deadlineTextView.text = ""
             }
         }
+        deleteButton.setOnClickListener { deleteItem() }
 
         return view
     }
@@ -129,6 +134,11 @@ class EditTodoItemFragment : Fragment() {
         val todoItem = TodoItem(id, text, priority, deadline, false, creationDate, creationDate)
         todoViewModel.addTodoItem(todoItem)
 
+        requireActivity().supportFragmentManager.popBackStack()
+    }
+
+    private fun deleteItem() {
+        todoViewModel.deleteItem(todoItemId)
         requireActivity().supportFragmentManager.popBackStack()
     }
 }
