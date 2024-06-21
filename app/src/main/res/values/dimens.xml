@@ -8,4 +8,5 @@
     <dimen name="todo_text_padding">2dp</dimen>
     <dimen name="todo_text_height">100dp</dimen>
     <dimen name="importance_textsize">20sp</dimen>
+    <dimen name="item_date_text">50dp</dimen>
 </resources>

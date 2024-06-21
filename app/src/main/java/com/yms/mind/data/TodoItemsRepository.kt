@@ -7,7 +7,7 @@ class TodoItemsRepository {
     init {
         todoItems["1"] = TodoItem("1", "Buy groceries", Priority.NORMAL, "2022-09-30", false, "2022-09-27", null)
         todoItems["2"] = TodoItem("2", "Finish report blah blah  blah blah  blah blah  blah blah", Priority.HIGH, "2022-10-05", false, "2022-09-27", null)
-        todoItems["3"] = TodoItem("3", "Call mom", Priority.LOW, "null", true, "2022-09-28", null)
+        todoItems["3"] = TodoItem("3", "Call mom", Priority.LOW, null, true, "2022-09-28", null)
         todoItems["4"] = TodoItem("4", "Go for a run", Priority.NORMAL, "2022-09-29", false, "2022-09-27", null)
         todoItems["5"] = TodoItem("5", "Read a book", Priority.LOW, null, false, "2022-09-28", null)
         todoItems["6"] = TodoItem("6", longText, Priority.LOW, null, false, "2022-09-28", null)

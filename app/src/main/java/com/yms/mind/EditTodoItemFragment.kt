@@ -1,5 +1,6 @@
 package com.yms.mind
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
@@ -13,6 +14,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.yms.mind.data.Priority
 import com.yms.mind.data.TodoItem
+import java.util.*
 
 
 class EditTodoItemFragment : Fragment() {
@@ -21,6 +23,7 @@ class EditTodoItemFragment : Fragment() {
     private lateinit var todoText: TextInputEditText
     private lateinit var importanceTextView: TextView
     private lateinit var deadlineSwitch: SwitchMaterial
+    private lateinit var deadlineTextView: TextView
     private lateinit var deleteButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +45,36 @@ class EditTodoItemFragment : Fragment() {
         todoText = view.findViewById(R.id.todo_text)
         importanceTextView = view.findViewById(R.id.importance)
         deadlineSwitch = view.findViewById(R.id.switch_deadline)
+        deadlineTextView = view.findViewById(R.id.deadline)
         deleteButton = view.findViewById(R.id.delete_button)
+
         importanceTextView.setOnClickListener{ showPopup(it) }
+        deadlineSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                showDatePicker()
+            } else {
+                deadlineTextView.text = ""
+            }
+        }
 
         return view
+    }
+
+    private fun showDatePicker() {
+        val currentDate = Calendar.getInstance()
+        val year = currentDate.get(Calendar.YEAR)
+        val month = currentDate.get(Calendar.MONTH)
+        val day = currentDate.get(Calendar.DAY_OF_MONTH)
+
+        val datePicker = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val selectedDate = Calendar.getInstance()
+            selectedDate.set(selectedYear, selectedMonth, selectedDay)
+
+            val stringDate = "$selectedDay.$selectedMonth.$selectedYear"
+            deadlineTextView.text = stringDate
+        }, year, month, day)
+
+        datePicker.show()
     }
 
 
@@ -85,12 +114,19 @@ class EditTodoItemFragment : Fragment() {
     }
 
     private fun saveData() {
+        val currentDate = Calendar.getInstance()
+        val year = currentDate.get(Calendar.YEAR)
+        val month = currentDate.get(Calendar.MONTH)
+        val day = currentDate.get(Calendar.DAY_OF_MONTH)
+
         val id = todoViewModel.generateId()
         val text = todoText.text.toString()
         val priority = getPriorityId(importanceTextView.text.toString())
-        val deadline = if (deadlineSwitch.isChecked) "22.06.2024" else null
+        val deadline = if (deadlineSwitch.isChecked) deadlineTextView.text.toString()
+            else null
+        val creationDate = "$day.$month.$year"
 
-        val todoItem = TodoItem(id, text, priority, deadline, false, "22.06.2024", null)
+        val todoItem = TodoItem(id, text, priority, deadline, false, creationDate, creationDate)
         todoViewModel.addTodoItem(todoItem)
 
         requireActivity().supportFragmentManager.popBackStack()

@@ -1,6 +1,7 @@
 package com.yms.mind.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +41,8 @@ class TaskAdapter(
             checkBox.setOnClickListener {
                 checkBoxClickListener.onCheckBoxClicked(holder.adapterPosition, checkBox.isChecked)
             }
+            if (task.deadline != null) dateText.text = task.deadline
+            else dateText.visibility = View.GONE
         }
     }
 }
