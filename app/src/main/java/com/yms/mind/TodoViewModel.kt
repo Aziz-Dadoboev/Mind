@@ -20,9 +20,19 @@ class TodoViewModel: ViewModel() {
         _todoItems.value = repository.getTodoItems()
     }
 
-    fun checkItem(id: String, status: Boolean) {
+    private fun loadVisibleItems() {
+        _todoItems.value = repository.getUndoneTasks()
+    }
+
+    fun setVisible(isVisible: Boolean) {
+        if (!isVisible) loadVisibleItems()
+        else loadTodoItems()
+    }
+
+    fun checkItem(id: String, status: Boolean, isVisible: Boolean) {
         repository.checkItem(id, status)
-        loadTodoItems()
+        if (!isVisible) loadVisibleItems()
+        else loadTodoItems()
     }
 
     fun generateId(): String {

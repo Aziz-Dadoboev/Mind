@@ -80,16 +80,15 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
                 it.setIcon(R.drawable.ic_visibility)
                 true
             }
-            val items = if (isVisible) todoViewModel.todoItems.value
-                        else todoViewModel.todoItems.value.filter { !it.status }
-            adapter.data = items
+            todoViewModel.setVisible(isVisible)
+            adapter.data = todoViewModel.todoItems.value
             true
         }
     }
 
     override fun onCheckBoxClicked(position: Int, isChecked: Boolean) {
         val item = adapter.data[position]
-        todoViewModel.checkItem(item.id, !item.status)
+        todoViewModel.checkItem(item.id, !item.status, isVisible)
     }
 
 }

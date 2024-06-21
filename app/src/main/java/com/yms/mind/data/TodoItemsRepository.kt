@@ -17,6 +17,16 @@ class TodoItemsRepository {
         return todoItems.values.toList()
     }
 
+    fun getUndoneTasks(): List<TodoItem> {
+        val taskList = mutableListOf<TodoItem>()
+        for (item in todoItems) {
+            if (!item.value.status) {
+                taskList.add(item.value)
+            }
+        }
+        return taskList
+    }
+
     fun checkItem(id: String, status: Boolean) {
         val newItem = todoItems[id]?.copy(status = status)
         if (newItem != null) todoItems[id] = newItem

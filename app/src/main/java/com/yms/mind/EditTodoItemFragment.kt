@@ -1,6 +1,5 @@
 package com.yms.mind
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
@@ -9,33 +8,23 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
-import com.yms.mind.data.OnTodoItemAddedListener
 import com.yms.mind.data.Priority
 import com.yms.mind.data.TodoItem
-import com.yms.mind.data.TodoItemsRepository
 
 
 class EditTodoItemFragment : Fragment() {
-    private lateinit var repository: TodoItemsRepository
+
+    private lateinit var todoViewModel: TodoViewModel
     private lateinit var todoText: TextInputEditText
     private lateinit var importanceTextView: TextView
     private lateinit var deadlineSwitch: SwitchMaterial
     private lateinit var deleteButton: Button
-    private lateinit var callback: OnTodoItemAddedListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        repository = TodoItemsRepository()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            callback = context as OnTodoItemAddedListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement OnTodoItemAddedListener")
-        }
+        todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -49,16 +38,14 @@ class EditTodoItemFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
         setHasOptionsMenu(true)
-        return view
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         todoText = view.findViewById(R.id.todo_text)
         importanceTextView = view.findViewById(R.id.importance)
         deadlineSwitch = view.findViewById(R.id.switch_deadline)
         deleteButton = view.findViewById(R.id.delete_button)
-
         importanceTextView.setOnClickListener{ showPopup(it) }
+
+        return view
     }
 
 
@@ -84,39 +71,28 @@ class EditTodoItemFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.edit_toolbar_menu, menu)
-        val menuVisibilityItem = menu.findItem(R.id.save)
-        setupMenu(menuVisibilityItem)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    private fun setupMenu(menuVisibilityItem: MenuItem) {
-        menuVisibilityItem.setOnMenuItemClickListener {
-            saveData()
-            true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.save -> {
+                saveData()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun saveData() {
-        val id = repository.generateId()
+        val id = todoViewModel.generateId()
         val text = todoText.text.toString()
         val priority = getPriorityId(importanceTextView.text.toString())
-        val deadline = if (deadlineSwitch.isChecked) {
-            "22.06.2024"
-        } else {
-            null
-        }
-        repository.addTodoItem(
-            TodoItem(
-            id,
-            text,
-            priority,
-            deadline,
-            false,
-            "22.06.2024",
-            null
-            )
-        )
-        callback.onTodoItemAdded()
+        val deadline = if (deadlineSwitch.isChecked) "22.06.2024" else null
+
+        val todoItem = TodoItem(id, text, priority, deadline, false, "22.06.2024", null)
+        todoViewModel.addTodoItem(todoItem)
+
         requireActivity().supportFragmentManager.popBackStack()
     }
 }
