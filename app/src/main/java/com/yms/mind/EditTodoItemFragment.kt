@@ -25,7 +25,9 @@ class EditTodoItemFragment : Fragment() {
     private lateinit var deadlineSwitch: SwitchMaterial
     private lateinit var deadlineTextView: TextView
     private lateinit var deleteButton: Button
+    private var newTodo: Boolean = true
     private var todoItemId: String? = null
+    private var currTodoItem: TodoItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
@@ -54,14 +56,16 @@ class EditTodoItemFragment : Fragment() {
 
         importanceTextView.setOnClickListener{ showPopup(it) }
         deleteButton.setOnClickListener { deleteItem() }
-        setUpSwitch()
         setUpDataIfGiven()
+        setUpSwitch()
 
         return view
     }
 
     private fun setUpSwitch() {
-        var isUserClicked = false
+        var isUserClicked =
+            if (currTodoItem != null) currTodoItem?.deadline == null
+            else newTodo
         deadlineSwitch.setOnClickListener {
             isUserClicked = true
         }
@@ -76,12 +80,13 @@ class EditTodoItemFragment : Fragment() {
     }
 
     private fun setUpDataIfGiven() {
-        val todoItem: TodoItem? = todoItemId?.let { todoViewModel.getItem(it) }
-        if (todoItem != null) {
-            todoText.setText(todoItem.text)
-            importanceTextView.text = getPriorityString(todoItem.priority.toString())
-            deadlineSwitch.isChecked = todoItem.deadline != null
-            deadlineTextView.text = todoItem.deadline
+        currTodoItem = todoItemId?.let { todoViewModel.getItem(it) }
+        if (currTodoItem != null) {
+            newTodo = false
+            todoText.setText(currTodoItem!!.text)
+            importanceTextView.text = getPriorityString(currTodoItem!!.priority.toString())
+            deadlineSwitch.isChecked = currTodoItem!!.deadline != null
+            deadlineTextView.text = currTodoItem!!.deadline
         }
     }
 
@@ -153,10 +158,13 @@ class EditTodoItemFragment : Fragment() {
         val month = currentDate.get(Calendar.MONTH)
         val day = currentDate.get(Calendar.DAY_OF_MONTH)
 
-        val id = todoViewModel.generateId()
+        val id =
+            if (newTodo) todoViewModel.generateId()
+            else todoItemId!!
         val text = todoText.text.toString()
         val priority = getPriorityId(importanceTextView.text.toString())
-        val deadline = if (deadlineSwitch.isChecked) deadlineTextView.text.toString()
+        val deadline =
+            if (deadlineSwitch.isChecked) deadlineTextView.text.toString()
             else null
         val creationDate = "$day.$month.$year"
 
