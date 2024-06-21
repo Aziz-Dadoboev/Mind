@@ -16,7 +16,8 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_close" />
+            app:navigationIcon="@drawable/ic_close"
+            app:menu="@menu/edit_toolbar_menu" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -75,6 +76,60 @@
                 android:layout_marginEnd="@dimen/edit_fragment_margin"
                 android:text="@string/importance_title_demo"
                 app:layout_constraintTop_toBottomOf="@+id/importance_label"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edit_fragment_margin"
+                android:layout_marginStart="@dimen/edit_fragment_margin"
+                android:layout_marginEnd="@dimen/edit_fragment_margin"
+                app:layout_constraintTop_toBottomOf="@+id/importance_title"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_deadline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/edit_fragment_margin"
+                android:layout_marginStart="@dimen/edit_fragment_margin"
+                android:layout_marginEnd="@dimen/edit_fragment_margin"
+                android:checked="false"
+                android:text="@string/do_until"
+                android:textSize="@dimen/importance_textsize"
+                app:layout_constraintTop_toBottomOf="@+id/divider_one"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/deadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/edit_fragment_margin"
+                android:layout_marginEnd="@dimen/edit_fragment_margin"
+                tools:text="@string/deadline_demo"
+                android:textColor="@color/app_blue"
+                app:layout_constraintTop_toBottomOf="@+id/switch_deadline"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider_second"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edit_divider_second_margin_top"
+                app:layout_constraintTop_toBottomOf="@+id/deadline"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edit_divider_second_margin_top"
+                android:layout_marginStart="@dimen/edit_fragment_margin"
+                app:icon="@drawable/ic_delete"
+                android:text="@string/delete"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:layout_constraintTop_toBottomOf="@+id/divider_second"
                 app:layout_constraintStart_toStartOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

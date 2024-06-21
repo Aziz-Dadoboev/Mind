@@ -8,4 +8,8 @@
     <string name="edit_todo_hint">Что надо сделать…</string>
     <string name="importance">Важность</string>
     <string name="importance_title_demo">Нет</string>
+    <string name="deadline_demo">21 июня 2024</string>
+    <string name="save">Сохранить</string>
+    <string name="do_until">Сделать до</string>
+    <string name="delete">Удалить</string>
 </resources>

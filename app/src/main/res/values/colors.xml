@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="app_background">#F7F6F2</color>
     <color name="ic_add_bgcolor">#007AFF</color>
+    <color name="app_blue">#007AFF</color>
+    <color name="app_red">#FF0000</color>
 </resources>
