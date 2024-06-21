@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -162,6 +163,11 @@ class EditTodoItemFragment : Fragment() {
             if (newTodo) todoViewModel.generateId()
             else todoItemId!!
         val text = todoText.text.toString()
+        if (text == "") {
+            Toast.makeText(context, "Заполните поле ввода", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val priority = getPriorityId(importanceTextView.text.toString())
         val deadline =
             if (deadlineSwitch.isChecked) deadlineTextView.text.toString()
