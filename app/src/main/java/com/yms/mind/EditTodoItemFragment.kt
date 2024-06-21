@@ -105,6 +105,10 @@ class EditTodoItemFragment : Fragment() {
             deadlineTextView.text = stringDate
         }, year, month, day)
 
+        datePicker.setOnCancelListener {
+            deadlineSwitch.isChecked = false
+        }
+
         datePicker.show()
     }
 
