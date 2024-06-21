@@ -1,30 +1,32 @@
 package com.yms.mind
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yms.mind.adapters.OnCheckBoxListener
-import com.yms.mind.adapters.TaskAdapater
-import com.yms.mind.data.TodoItemsRepository
+import com.yms.mind.adapters.TaskAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class TodoItemsFragment : Fragment(), OnCheckBoxListener {
 
-    private lateinit var repository: TodoItemsRepository
-    private lateinit var adapter: TaskAdapater
+    private lateinit var todoViewModel: TodoViewModel
+    private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
     private lateinit var recyclerView: RecyclerView
     private var isVisible = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        repository = TodoItemsRepository()
+        todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -44,8 +46,15 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = TaskAdapater(this)
-        setupData(isVisible)
+        adapter = TaskAdapter(this)
+        recyclerView.adapter = adapter
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            todoViewModel.todoItems.collect { items ->
+                adapter.data = items
+                subtitle.text = getString(R.string.subtitle, items.count { it.status })
+            }
+        }
         fab.setOnClickListener {
             val nextFrag = EditTodoItemFragment()
             requireActivity().supportFragmentManager.beginTransaction()
@@ -58,38 +67,29 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_toolbar_menu, menu)
         val menuVisibilityItem = menu.findItem(R.id.visibility)
-        Log.d("VISIBLE", "$menuVisibilityItem Here")
         setupMenu(menuVisibilityItem)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun setupMenu(menuVisibilityItem: MenuItem) {
-        menuVisibilityItem.setOnMenuItemClickListener {
-            Log.d("VISIBLE", "$isVisible")
+        menuVisibilityItem.setOnMenuItemClickListener { it ->
             isVisible = if (isVisible) {
                 it.setIcon(R.drawable.ic_visibility_off)
-                setupData(false)
                 false
             } else {
                 it.setIcon(R.drawable.ic_visibility)
-                setupData(true)
                 true
             }
+            val items = if (isVisible) todoViewModel.todoItems.value
+                        else todoViewModel.todoItems.value.filter { !it.status }
+            adapter.data = items
             true
         }
     }
 
-    private fun setupData(all: Boolean) {
-        adapter.data =
-            if (all) repository.getTodoItems()
-            else repository.getUndoneTasks()
-        recyclerView.adapter = adapter
-        subtitle.text = getString(R.string.subtitle, repository.getDoneCount())
-    }
     override fun onCheckBoxClicked(position: Int, isChecked: Boolean) {
         val item = adapter.data[position]
-        repository.checkItem(item.id, !item.status)
-        subtitle.text = getString(R.string.subtitle, repository.getDoneCount())
-        setupData(isVisible)
+        todoViewModel.checkItem(item.id, !item.status)
     }
+
 }

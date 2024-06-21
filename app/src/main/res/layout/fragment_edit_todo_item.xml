@@ -46,6 +46,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/todo_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
@@ -69,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
-                android:id="@+id/importance_title"
+                android:id="@+id/importance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/edit_fragment_margin"
@@ -85,7 +86,7 @@
                 android:layout_marginTop="@dimen/edit_fragment_margin"
                 android:layout_marginStart="@dimen/edit_fragment_margin"
                 android:layout_marginEnd="@dimen/edit_fragment_margin"
-                app:layout_constraintTop_toBottomOf="@+id/importance_title"
+                app:layout_constraintTop_toBottomOf="@+id/importance"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial

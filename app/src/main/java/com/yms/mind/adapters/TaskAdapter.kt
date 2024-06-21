@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yms.mind.data.TodoItem
 import com.yms.mind.databinding.TodoItemBinding
 
-class TaskAdapater(
+class TaskAdapter(
     private val checkBoxClickListener: OnCheckBoxListener
-) : RecyclerView.Adapter<TaskAdapater.TaskViewHolder>() {
+) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     var data: List<TodoItem> = mutableListOf()
         set(value) {
@@ -32,11 +32,13 @@ class TaskAdapater(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = data[position]
+
         with(holder.binding) {
             checkBox.text = task.text
             checkBox.isChecked = task.status
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                checkBoxClickListener.onCheckBoxClicked(position, isChecked)
+            checkBox.setOnCheckedChangeListener(null)
+            checkBox.setOnClickListener {
+                checkBoxClickListener.onCheckBoxClicked(holder.adapterPosition, checkBox.isChecked)
             }
         }
     }

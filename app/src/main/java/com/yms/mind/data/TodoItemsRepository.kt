@@ -3,7 +3,7 @@ package com.yms.mind.data
 class TodoItemsRepository {
     private val todoItems = HashMap<String, TodoItem>()
     private val longText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
+    private var uniqueId = 7
     init {
         todoItems["1"] = TodoItem("1", "Buy groceries", Priority.NORMAL, "2022-09-30", false, "2022-09-27", null)
         todoItems["2"] = TodoItem("2", "Finish report blah blah  blah blah  blah blah  blah blah", Priority.HIGH, "2022-10-05", false, "2022-09-27", null)
@@ -17,26 +17,6 @@ class TodoItemsRepository {
         return todoItems.values.toList()
     }
 
-    fun getDoneCount(): Int {
-        var count = 0
-        for (item in todoItems) {
-            if (item.value.status) {
-                count++
-            }
-        }
-        return count
-    }
-
-    fun getUndoneTasks(): List<TodoItem> {
-        val taskList = mutableListOf<TodoItem>()
-        for (item in todoItems) {
-            if (!item.value.status) {
-                taskList.add(item.value)
-            }
-        }
-        return taskList
-    }
-
     fun checkItem(id: String, status: Boolean) {
         val newItem = todoItems[id]?.copy(status = status)
         if (newItem != null) todoItems[id] = newItem
@@ -44,5 +24,12 @@ class TodoItemsRepository {
 
     fun addTodoItem(todoItem: TodoItem) {
         todoItems[todoItem.id] = todoItem
+    }
+
+    fun generateId() : String {
+        while (todoItems[uniqueId.toString()] != null) {
+            uniqueId++
+        }
+        return uniqueId.toString()
     }
 }
