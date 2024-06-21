@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yms.mind.adapters.OnCheckBoxListener
 import com.yms.mind.adapters.TaskAdapater
 import com.yms.mind.data.TodoItemsRepository
@@ -40,14 +41,22 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         subtitle = view.findViewById<TextView>(R.id.tasks_done)
+        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = TaskAdapater(this)
         setupData(isVisible)
+        fab.setOnClickListener {
+            val nextFrag = EditTodoItemFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
+        inflater.inflate(R.menu.home_toolbar_menu, menu)
         val menuVisibilityItem = menu.findItem(R.id.visibility)
         Log.d("VISIBLE", "$menuVisibilityItem Here")
         setupMenu(menuVisibilityItem)
