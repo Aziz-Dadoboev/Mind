@@ -25,6 +25,6 @@ class TodoListDiffUtilCallback(
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
-        return oldItem.hashCode() == newItem.hashCode()
+        return oldItem == newItem
     }
 }
