@@ -20,34 +20,44 @@ class TaskAdapter(
             diffResult.dispatchUpdatesTo(this)
         }
 
-    class TaskViewHolder(val binding: TodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TaskViewHolder(
+        private val binding: TodoItemBinding,
+        private val checkBoxClickListener: OnCheckBoxListener,
+        private val itemClickListener: OnItemClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(task: TodoItem) {
+            with(binding) {
+                checkText.text = task.text
+                checkBox.isChecked = task.status
+                checkBox.setOnCheckedChangeListener(null)
+                checkBox.setOnClickListener {
+                    checkBoxClickListener.onCheckBoxClicked(adapterPosition, checkBox.isChecked)
+                }
+                if (task.deadline != null) {
+                    dateText.text = task.deadline
+                    dateText.visibility = View.VISIBLE
+                } else {
+                    dateText.visibility = View.GONE
+                }
+
+                root.setOnClickListener {
+                    itemClickListener.onItemClick(task)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = TodoItemBinding.inflate(inflater, parent, false)
 
-        return TaskViewHolder(binding)
+        return TaskViewHolder(binding, checkBoxClickListener, itemClickListener)
     }
 
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = data[position]
-
-        with(holder.binding) {
-            checkText.text = task.text
-            checkBox.isChecked = task.status
-            checkBox.setOnCheckedChangeListener(null)
-            checkBox.setOnClickListener {
-                checkBoxClickListener.onCheckBoxClicked(holder.adapterPosition, checkBox.isChecked)
-            }
-            if (task.deadline != null) dateText.text = task.deadline
-            else dateText.visibility = View.GONE
-
-            root.setOnClickListener {
-                itemClickListener.onItemClick(task)
-            }
-        }
+        holder.bind(task)
     }
 }
