@@ -72,6 +72,7 @@ class TodoItemsFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 todoViewModel.todoItems.collect { tasks ->
                     adapter.submitList(tasks)
+                    updateSubtitle()
                 }
             }
         }
@@ -121,5 +122,10 @@ class TodoItemsFragment : Fragment() {
             menuVisibilityItem.setIcon(R.drawable.ic_visibility_off)
         }
         todoViewModel.setVisible(isVisible)
+    }
+
+    private fun updateSubtitle() {
+        val completedTasksCount = todoViewModel.getCompletedTasksCount()
+        subtitle.text = getString(R.string.subtitle, completedTasksCount)
     }
 }

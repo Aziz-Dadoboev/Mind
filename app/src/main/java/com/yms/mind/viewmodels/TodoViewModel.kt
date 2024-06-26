@@ -64,4 +64,8 @@ class TodoViewModel: ViewModel() {
     suspend fun getItem(todoItemId: String): TodoItem? {
         return repository.getItem(todoItemId)
     }
+
+    fun getCompletedTasksCount(): Int {
+        return todoItems.value.count { it.status }
+    }
 }
