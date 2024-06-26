@@ -1,4 +1,4 @@
-package com.yms.mind
+package com.yms.mind.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.yms.mind.data.TodoItem

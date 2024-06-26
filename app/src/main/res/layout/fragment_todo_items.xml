@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@color/app_background"
-    tools:context=".TodoItemsFragment">
+    tools:context=".fragments.TodoItemsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"

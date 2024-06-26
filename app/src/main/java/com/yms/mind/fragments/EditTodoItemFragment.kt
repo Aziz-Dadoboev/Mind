@@ -1,4 +1,4 @@
-package com.yms.mind
+package com.yms.mind.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -13,8 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
+import com.yms.mind.R
 import com.yms.mind.data.Priority
 import com.yms.mind.data.TodoItem
+import com.yms.mind.viewmodels.TodoViewModel
 import java.util.*
 
 

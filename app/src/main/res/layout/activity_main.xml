@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.yms.mind.TodoItemsFragment" />
+        android:name="com.yms.mind.fragments.TodoItemsFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

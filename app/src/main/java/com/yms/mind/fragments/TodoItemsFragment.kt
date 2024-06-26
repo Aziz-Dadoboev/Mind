@@ -1,4 +1,4 @@
-package com.yms.mind
+package com.yms.mind.fragments
 
 import android.os.Bundle
 import android.view.*
@@ -11,10 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.yms.mind.R
 import com.yms.mind.adapters.OnCheckBoxListener
 import com.yms.mind.adapters.OnItemClickListener
 import com.yms.mind.adapters.TaskAdapter
 import com.yms.mind.data.TodoItem
+import com.yms.mind.viewmodels.TodoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
