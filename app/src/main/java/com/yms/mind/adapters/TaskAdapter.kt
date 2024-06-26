@@ -3,7 +3,7 @@ package com.yms.mind.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yms.mind.data.TodoItem
 import com.yms.mind.databinding.TodoItemBinding
@@ -11,27 +11,33 @@ import com.yms.mind.databinding.TodoItemBinding
 class TaskAdapter(
     private val checkBoxClickListener: OnCheckBoxListener,
     private val itemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+) : ListAdapter<TodoItem, TaskAdapter.TaskViewHolder>(TodoListDiffUtilCallback()) {
 
-    var data: List<TodoItem> = mutableListOf()
-        set(value) {
-            val diffResult = DiffUtil.calculateDiff(TodoListDiffUtilCallback(field, value))
-            field = value
-            diffResult.dispatchUpdatesTo(this)
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = TodoItemBinding.inflate(inflater, parent, false)
+        return TaskViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+        val task = getItem(position)
+        holder.bind(task, checkBoxClickListener, itemClickListener)
+    }
 
     class TaskViewHolder(
-        private val binding: TodoItemBinding,
-        private val checkBoxClickListener: OnCheckBoxListener,
-        private val itemClickListener: OnItemClickListener
+        private val binding: TodoItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(task: TodoItem) {
+        fun bind(
+            task: TodoItem,
+            checkBoxClickListener: OnCheckBoxListener,
+            itemClickListener: OnItemClickListener
+        ) {
             with(binding) {
                 checkText.text = task.text
                 checkBox.isChecked = task.status
                 checkBox.setOnCheckedChangeListener(null)
                 checkBox.setOnClickListener {
-                    checkBoxClickListener.onCheckBoxClicked(adapterPosition, checkBox.isChecked)
+                    checkBoxClickListener.onCheckBoxClicked(task.id, checkBox.isChecked)
                 }
                 if (task.deadline != null) {
                     dateText.text = task.deadline
@@ -45,19 +51,5 @@ class TaskAdapter(
                 }
             }
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = TodoItemBinding.inflate(inflater, parent, false)
-
-        return TaskViewHolder(binding, checkBoxClickListener, itemClickListener)
-    }
-
-    override fun getItemCount(): Int = data.size
-
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val task = data[position]
-        holder.bind(task)
     }
 }

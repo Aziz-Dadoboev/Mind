@@ -1,32 +1,39 @@
 package com.yms.mind.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yms.mind.R
 import com.yms.mind.adapters.OnCheckBoxListener
 import com.yms.mind.adapters.OnItemClickListener
 import com.yms.mind.adapters.TaskAdapter
 import com.yms.mind.data.TodoItem
+import com.yms.mind.databinding.FragmentTodoItemsBinding
 import com.yms.mind.viewmodels.TodoViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class TodoItemsFragment : Fragment(), OnCheckBoxListener, OnItemClickListener {
+class TodoItemsFragment : Fragment() {
 
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var fab: FloatingActionButton
     private var isVisible = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,29 +43,39 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener, OnItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_todo_items, container, false)
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+    ): View {
+        val binding = FragmentTodoItemsBinding.inflate(inflater, container, false)
+        val toolbar = binding.toolbar
         (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
-        setHasOptionsMenu(true)
-        return view
-    }
+        val menuHost: MenuHost = requireActivity()
+        setupMenu(menuHost)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        subtitle = view.findViewById<TextView>(R.id.tasks_done)
-        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
+        subtitle = binding.tasksDone
+        fab = binding.fab
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = TaskAdapter(this, this)
-        recyclerView.adapter = adapter
+        adapter = TaskAdapter(
+            checkBoxClickListener = object : OnCheckBoxListener {
+                override fun onCheckBoxClicked(id: String, isChecked: Boolean) {
+                    todoViewModel.checkItem(id, isChecked, isVisible)
+                }
+            },
+            itemClickListener = object : OnItemClickListener {
+                override fun onItemClick(todoItem: TodoItem) {
+                    // TODO Перейти на экран редактирования
+                }
+            }
+        )
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            todoViewModel.todoItems.collect { items ->
-                adapter.data = items
-                subtitle.text = getString(R.string.subtitle, items.count { it.status })
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel.todoItems.collect { tasks ->
+                    adapter.submitList(tasks)
+                }
             }
         }
+
         fab.setOnClickListener {
             val nextFrag = EditTodoItemFragment()
             requireActivity().supportFragmentManager.beginTransaction()
@@ -66,45 +83,43 @@ class TodoItemsFragment : Fragment(), OnCheckBoxListener, OnItemClickListener {
                 .addToBackStack(null)
                 .commit()
         }
+
+        return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_toolbar_menu, menu)
-        val menuVisibilityItem = menu.findItem(R.id.visibility)
-        setupMenu(menuVisibilityItem)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    private fun setupMenu(menuVisibilityItem: MenuItem) {
-        menuVisibilityItem.setOnMenuItemClickListener { it ->
-            isVisible = if (isVisible) {
-                it.setIcon(R.drawable.ic_visibility_off)
-                false
-            } else {
-                it.setIcon(R.drawable.ic_visibility)
-                true
+    private fun setupMenu(menuHost: MenuHost) {
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.home_toolbar_menu, menu)
             }
-            todoViewModel.setVisible(isVisible)
-            adapter.data = todoViewModel.todoItems.value
-            true
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.visibility -> {
+                        toggleVisibility(menuItem)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel.todoItems.collect { tasks ->
+                    adapter.submitList(tasks)
+                }
+            }
         }
     }
 
-    override fun onCheckBoxClicked(position: Int, isChecked: Boolean) {
-        val item = adapter.data[position]
-        todoViewModel.checkItem(item.id, !item.status, isVisible)
-    }
-
-    override fun onItemClick(todoItem: TodoItem) {
-        val editFragment = EditTodoItemFragment()
-
-        val bundle = Bundle()
-        bundle.putString("todoItem", todoItem.id)
-        editFragment.arguments = bundle
-
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, editFragment, "EditTodoItemFragment")
-            .addToBackStack(null)
-            .commit()
+    private fun toggleVisibility(menuVisibilityItem: MenuItem) {
+        isVisible = !isVisible
+        if (isVisible) {
+            menuVisibilityItem.setIcon(R.drawable.ic_visibility)
+        } else {
+            menuVisibilityItem.setIcon(R.drawable.ic_visibility_off)
+        }
+        todoViewModel.setVisible(isVisible)
     }
 }
