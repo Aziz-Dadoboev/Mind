@@ -17,7 +17,7 @@ class TodoListDiffUtilCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
-        return oldItem.javaClass == newItem.javaClass
+        return oldItem.id == newItem.id
     }
 
     // check if contents are same
