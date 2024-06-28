@@ -1,4 +1,4 @@
-package com.yms.mind
+package com.yms.mind.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

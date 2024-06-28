@@ -1,9 +1,11 @@
 package com.yms.mind.data
 
+import java.util.UUID
+
 class TodoItemsRepository {
     private val todoItems = HashMap<String, TodoItem>()
     private val longText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    private var uniqueId = 11
+
     init {
         todoItems["1"] = TodoItem("1", "Buy groceries", Priority.NORMAL, "2022-09-30", false, "2022-09-27", null)
         todoItems["2"] = TodoItem("2", "Finish report blah blah  blah blah  blah blah  blah blah", Priority.HIGH, "2022-10-05", false, "2022-09-27", null)
@@ -17,11 +19,11 @@ class TodoItemsRepository {
         todoItems["10"] = TodoItem("10", "Attend online webinar", Priority.NORMAL, "2022-10-03", false, "2022-09-27", null)
     }
 
-    fun getTodoItems(): List<TodoItem> {
+    suspend fun getTodoItems(): List<TodoItem> {
         return todoItems.values.toList()
     }
 
-    fun getUndoneTasks(): List<TodoItem> {
+    suspend fun getUndoneTasks(): List<TodoItem> {
         val taskList = mutableListOf<TodoItem>()
         for (item in todoItems) {
             if (!item.value.status) {
@@ -31,27 +33,24 @@ class TodoItemsRepository {
         return taskList
     }
 
-    fun checkItem(id: String, status: Boolean) {
+    suspend fun checkItem(id: String, status: Boolean) {
         val newItem = todoItems[id]?.copy(status = status)
         if (newItem != null) todoItems[id] = newItem
     }
 
-    fun addTodoItem(todoItem: TodoItem) {
+    suspend fun addTodoItem(todoItem: TodoItem) {
         todoItems[todoItem.id] = todoItem
     }
 
-    fun deleteItem(todoItemId: String) {
+    suspend fun deleteItem(todoItemId: String) {
         todoItems.remove(todoItemId)
     }
 
-    fun getItem(todoItemId: String) : TodoItem? {
+    suspend fun getItem(todoItemId: String) : TodoItem? {
         return todoItems[todoItemId]
     }
 
-    fun generateId() : String {
-        while (todoItems[uniqueId.toString()] != null) {
-            uniqueId++
-        }
-        return uniqueId.toString()
+    suspend fun generateId() : String {
+        return UUID.randomUUID().toString()
     }
 }

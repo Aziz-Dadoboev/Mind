@@ -1,8 +1,13 @@
-package com.yms.mind
+package com.yms.mind.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -13,9 +18,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
+import com.yms.mind.R
 import com.yms.mind.data.Priority
 import com.yms.mind.data.TodoItem
-import java.util.*
+import com.yms.mind.viewmodels.TodoViewModel
+import java.util.Calendar
 
 
 class EditTodoItemFragment : Fragment() {
@@ -57,8 +64,8 @@ class EditTodoItemFragment : Fragment() {
 
         importanceTextView.setOnClickListener{ showPopup(it) }
         deleteButton.setOnClickListener { deleteItem() }
-        setUpDataIfGiven()
-        setUpSwitch()
+//        setUpDataIfGiven()
+//        setUpSwitch()
 
         return view
     }
@@ -81,7 +88,7 @@ class EditTodoItemFragment : Fragment() {
     }
 
     private fun setUpDataIfGiven() {
-        currTodoItem = todoItemId?.let { todoViewModel.getItem(it) }
+//        currTodoItem = todoItemId?.let { todoViewModel.getItem(it) }
         if (currTodoItem != null) {
             newTodo = false
             todoText.setText(currTodoItem!!.text)
@@ -150,14 +157,14 @@ class EditTodoItemFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.save -> {
-                saveData()
+//                saveData()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun saveData() {
+    private suspend fun saveData() {
         val currentDate = Calendar.getInstance()
         val year = currentDate.get(Calendar.YEAR)
         val month = currentDate.get(Calendar.MONTH)
