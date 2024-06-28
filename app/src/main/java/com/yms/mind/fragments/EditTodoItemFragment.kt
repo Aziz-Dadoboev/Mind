@@ -12,20 +12,21 @@ import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.yms.mind.R
 import com.yms.mind.data.Priority
 import com.yms.mind.data.TodoItem
+import com.yms.mind.screens.EditItemScreen
 import com.yms.mind.viewmodels.TodoViewModel
 import java.util.Calendar
 
 
 class EditTodoItemFragment : Fragment() {
+
+    private lateinit var composeView: ComposeView
 
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var todoText: TextInputEditText
@@ -36,38 +37,52 @@ class EditTodoItemFragment : Fragment() {
     private var newTodo: Boolean = true
     private var todoItemId: String? = null
     private var currTodoItem: TodoItem? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
-        arguments?.getString("todoItem")?.let {
-            todoItemId = it
-        }
-    }
+//    override fun onCreate(
+//        savedInstanceState: Bundle?
+//    ) {
+//        super.onCreate(savedInstanceState)
+//        todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
+//        arguments?.getString("todoItem")?.let {
+//            todoItemId = it
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_edit_todo_item, container, false)
-        val toolbar = view.findViewById<Toolbar>(R.id.topAppBar)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
-        }
-        setHasOptionsMenu(true)
+    ): View {
 
-        todoText = view.findViewById(R.id.todo_text)
-        importanceTextView = view.findViewById(R.id.importance)
-        deadlineSwitch = view.findViewById(R.id.switch_deadline)
-        deadlineTextView = view.findViewById(R.id.deadline)
-        deleteButton = view.findViewById(R.id.delete_button)
+//        val view = inflater.inflate(R.layout.fragment_edit_todo_item, container, false)
+//        val toolbar = view.findViewById<Toolbar>(R.id.topAppBar)
+//        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
+//        toolbar.setNavigationOnClickListener {
+//            requireActivity().supportFragmentManager.popBackStack()
+//        }
+//        setHasOptionsMenu(true)
+//
+//        todoText = view.findViewById(R.id.todo_text)
+//        importanceTextView = view.findViewById(R.id.importance)
+//        deadlineSwitch = view.findViewById(R.id.switch_deadline)
+//        deadlineTextView = view.findViewById(R.id.deadline)
+//        deleteButton = view.findViewById(R.id.delete_button)
 
-        importanceTextView.setOnClickListener{ showPopup(it) }
-        deleteButton.setOnClickListener { deleteItem() }
+//        importanceTextView.setOnClickListener{ showPopup(it) }
+//        deleteButton.setOnClickListener { deleteItem() }
+
 //        setUpDataIfGiven()
 //        setUpSwitch()
 
-        return view
+//        return view
+        return ComposeView(requireContext()).also { composeView = it }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        composeView.setContent {
+            EditItemScreen(
+            )
+        }
     }
 
     private fun setUpSwitch() {
