@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.yms.mind.R
 import com.yms.mind.adapters.OnCheckBoxListener
@@ -33,7 +34,6 @@ class TodoItemsFragment : Fragment() {
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
-    private lateinit var fab: FloatingActionButton
     private var isVisible = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +47,36 @@ class TodoItemsFragment : Fragment() {
         val binding = FragmentTodoItemsBinding.inflate(inflater, container, false)
         val toolbar = binding.toolbar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
+
         val menuHost: MenuHost = requireActivity()
         setupMenu(menuHost)
-
+        setupRecycler(binding.recyclerView)
+        setupFab(binding.fab)
         subtitle = binding.tasksDone
-        fab = binding.fab
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel.todoItems.collect { tasks ->
+                    adapter.submitList(tasks)
+                    updateSubtitle()
+                }
+            }
+        }
+
+        return binding.root
+    }
+
+    private fun setupFab(fab: FloatingActionButton) {
+        fab.setOnClickListener {
+            val nextFrag = EditTodoItemFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun setupRecycler(recyclerView: RecyclerView) {
         adapter = TaskAdapter(
             checkBoxClickListener = object : OnCheckBoxListener {
                 override fun onCheckBoxClicked(id: String, isChecked: Boolean) {
@@ -66,27 +90,8 @@ class TodoItemsFragment : Fragment() {
                 }
             }
         )
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                todoViewModel.todoItems.collect { tasks ->
-                    adapter.submitList(tasks)
-                    updateSubtitle()
-                }
-            }
-        }
-
-        fab.setOnClickListener {
-            val nextFrag = EditTodoItemFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
-                .addToBackStack(null)
-                .commit()
-        }
-
-        return binding.root
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     private fun setupMenu(menuHost: MenuHost) {
