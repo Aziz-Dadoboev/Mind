@@ -46,7 +46,7 @@ class TodoItemsFragment : Fragment() {
     ): View {
         val binding = FragmentTodoItemsBinding.inflate(inflater, container, false)
         val toolbar = binding.toolbar
-        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         val menuHost: MenuHost = requireActivity()
         setupMenu(menuHost)
 
@@ -56,7 +56,8 @@ class TodoItemsFragment : Fragment() {
         adapter = TaskAdapter(
             checkBoxClickListener = object : OnCheckBoxListener {
                 override fun onCheckBoxClicked(id: String, isChecked: Boolean) {
-                    todoViewModel.checkItem(id, isChecked, isVisible)
+                    todoViewModel.checkItem(id, isChecked)
+                    updateSubtitle()
                 }
             },
             itemClickListener = object : OnItemClickListener {
@@ -121,7 +122,7 @@ class TodoItemsFragment : Fragment() {
         } else {
             menuVisibilityItem.setIcon(R.drawable.ic_visibility_off)
         }
-        todoViewModel.setVisible(isVisible)
+        todoViewModel.setItemsVisible(isVisible)
     }
 
     private fun updateSubtitle() {

@@ -11,36 +11,47 @@ import kotlinx.coroutines.launch
 class TodoViewModel: ViewModel() {
     private val repository = TodoItemsRepository()
 
+    private val _allTodoItems = MutableStateFlow<List<TodoItem>>(emptyList())
+    private val allTodoItems: StateFlow<List<TodoItem>> get() = _allTodoItems
+
+    // Отображаемый список
     private val _todoItems = MutableStateFlow<List<TodoItem>>(emptyList())
     val todoItems: StateFlow<List<TodoItem>> get() = _todoItems
 
+    private var todoItemsVisible: Boolean = true
+
     init {
-        loadTodoItems()
+        loadAllTodoItems()
+        _todoItems.value = _allTodoItems.value
     }
 
-    private fun loadTodoItems() {
+    private fun loadAllTodoItems() {
         viewModelScope.launch {
-            _todoItems.value = repository.getTodoItems()
+            _allTodoItems.value = repository.getTodoItems()
         }
     }
 
-    private suspend fun loadVisibleItems() {
-        _todoItems.value = repository.getUndoneTasks()
-    }
-
-    fun setVisible(isVisible: Boolean) {
-        viewModelScope.launch {
-            if (!isVisible) loadVisibleItems()
-            else loadTodoItems()
+    private fun updateVisibleItems() {
+        _todoItems.value = if (todoItemsVisible) {
+            _allTodoItems.value
+        } else {
+            _allTodoItems.value.filter { !it.status }
         }
     }
 
-    fun checkItem(id: String, status: Boolean, isVisible: Boolean) {
+    fun setItemsVisible(isVisible: Boolean) {
+        this.todoItemsVisible = isVisible
+        viewModelScope.launch {
+            updateVisibleItems()
+        }
+    }
+
+    fun checkItem(id: String, status: Boolean) {
         viewModelScope.launch {
             repository.checkItem(id, status)
-            if (!isVisible) loadVisibleItems()
-            else loadTodoItems()
+            loadAllTodoItems()
         }
+        updateVisibleItems()
     }
 
     suspend fun generateId(): String {
@@ -50,22 +61,22 @@ class TodoViewModel: ViewModel() {
     fun addTodoItem(todoItem: TodoItem) {
         viewModelScope.launch {
             repository.addTodoItem(todoItem)
-            loadTodoItems()
+            loadAllTodoItems()
         }
     }
 
     fun deleteItem(todoItemId: String) {
         viewModelScope.launch {
             repository.deleteItem(todoItemId)
-            loadTodoItems()
+            loadAllTodoItems()
         }
     }
 
-    suspend fun getItem(todoItemId: String): TodoItem? {
-        return repository.getItem(todoItemId)
-    }
+//    suspend fun getItem(todoItemId: String): TodoItem? {
+//        return repository.getItem(todoItemId)
+//    }
 
     fun getCompletedTasksCount(): Int {
-        return todoItems.value.count { it.status }
+        return allTodoItems.value.count { it.status }
     }
 }
