@@ -68,7 +68,7 @@ fun EditItemScreen(
 
 
     val todoTextState = remember { mutableStateOf(item?.text ?: "") }
-    val todoDeadlineState = remember { mutableStateOf(item?.deadline ?: "") }
+    val todoDeadlineState = remember { mutableStateOf(item?.deadline) }
     val todoPriorityState = remember { mutableStateOf(item?.priority ?: Priority.NORMAL) }
 
     val onSaveClick: () -> Unit = {
