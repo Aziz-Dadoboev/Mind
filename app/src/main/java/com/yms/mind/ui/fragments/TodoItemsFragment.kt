@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -60,6 +61,17 @@ class TodoItemsFragment : Fragment() {
                 todoViewModel.todoItems.collect { tasks ->
                     adapter.submitList(tasks)
                     updateSubtitle()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel.errorMessages.collect { errorMessage ->
+                    errorMessage?.let {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        todoViewModel.clearErrorMessage() // Добавьте метод в ViewModel для очистки сообщения
+                    }
                 }
             }
         }
