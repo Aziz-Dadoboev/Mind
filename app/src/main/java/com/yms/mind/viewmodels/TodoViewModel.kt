@@ -109,9 +109,10 @@ class TodoViewModel: ViewModel() {
         }
     }
 
+    // TODO Его идеи... Нужно придумать как это исправить
     suspend fun fetchItem(todoItemId: String): TodoItem? {
         return try {
-            withContext(Dispatchers.Main) { // Без этого пока никак(
+            withContext(Dispatchers.Main) {
                 repository.getItem(todoItemId)
             }
         } catch (e: Exception) {

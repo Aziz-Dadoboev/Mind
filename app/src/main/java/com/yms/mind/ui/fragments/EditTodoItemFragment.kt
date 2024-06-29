@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -56,6 +57,17 @@ class EditTodoItemFragment : Fragment() {
                     item = todoItem,
                     onNavigationClick = { requireActivity().supportFragmentManager.popBackStack() }
                 )
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel.errorMessages.collect { errorMessage ->
+                    errorMessage?.let {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        todoViewModel.clearErrorMessage()
+                    }
+                }
             }
         }
     }

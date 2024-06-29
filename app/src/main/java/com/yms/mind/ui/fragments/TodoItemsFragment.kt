@@ -70,7 +70,7 @@ class TodoItemsFragment : Fragment() {
                 todoViewModel.errorMessages.collect { errorMessage ->
                     errorMessage?.let {
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                        todoViewModel.clearErrorMessage() // Добавьте метод в ViewModel для очистки сообщения
+                        todoViewModel.clearErrorMessage()
                     }
                 }
             }
