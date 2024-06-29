@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.yms.mind.R
 import com.yms.mind.data.Priority
 import com.yms.mind.data.TodoItem
+import com.yms.mind.ui.theme.AppTheme
 import com.yms.mind.viewmodels.TodoViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -310,5 +311,45 @@ private fun Screen(
 
             Spacer(Modifier.height(32.dp))
         }
+    }
+}
+
+@Composable
+@Preview(name = "Light Theme", showBackground = true)
+private fun EditItemScreenLightPreview() {
+    AppTheme(useDarkTheme = false) {
+        EditItemScreen(
+            viewModel = TodoViewModel(),
+            item = TodoItem(
+                id = "1",
+                text = "Preview Todo Item",
+                priority = Priority.NORMAL,
+                status = false,
+                deadline = "2024-07-01",
+                creationDate = "2024-07-01",
+                modificationDate = "2024-07-01"
+            ),
+            onNavigationClick = {}
+        )
+    }
+}
+
+@Composable
+@Preview(name = "Dark Theme", showBackground = true)
+private fun EditItemScreenDarkPreview() {
+    AppTheme(useDarkTheme = true) {
+        EditItemScreen(
+            viewModel = TodoViewModel(),
+            item = TodoItem(
+                id = "1",
+                text = "Preview Todo Item",
+                priority = Priority.NORMAL,
+                status = false,
+                deadline = "2024-07-01",
+                creationDate = "2024-07-01",
+                modificationDate = "2024-07-01"
+            ),
+            onNavigationClick = {}
+        )
     }
 }

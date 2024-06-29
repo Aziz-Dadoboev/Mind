@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -88,12 +88,12 @@ private val DarkColors = darkColorScheme(
 @Preview(
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode Preview"
+    name = "Light Mode Preview"
 )
 @Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "Light Mode Preview"
+    showBackground = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode Preview"
 )
 
 @Composable
@@ -109,12 +109,6 @@ fun AppThemePreview(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    AppThemePreview(useDarkTheme = false)
 }
 
 @Composable
@@ -150,22 +144,36 @@ fun LightThemePreview(
 ) {
     AppTheme(useDarkTheme = false) {
         Surface {
-            Column(modifier = Modifier.background(LightColors.background)) {
+
+            Row(modifier = Modifier.background(LightColors.background)) {
                 Box(
                     modifier = Modifier
                         .background(LightColors.primary)
                         .size(100.dp)
-                )
+                )  {
+                    Text(text = "Color [Light] Blue / Primary")
+                }
                 Box(
                     modifier = Modifier
                         .background(LightColors.surface)
                         .size(100.dp)
-                )
+                ) {
+                    Text(text = "Color [Light] White / Surface")
+                }
                 Box(
                     modifier = Modifier
                         .background(LightColors.secondary)
                         .size(100.dp)
-                )
+                ) {
+                    Text(text = "Color [Light] Brown / Secondary")
+                }
+                Box(
+                    modifier = Modifier
+                        .background(LightColors.error)
+                        .size(100.dp)
+                ) {
+                    Text(text = "Color [Dark] Red / error")
+                }
             }
         }
     }
@@ -182,22 +190,35 @@ fun DarkThemePreview(
 ) {
     AppTheme(useDarkTheme = true) {
         Surface {
-            Column(modifier = Modifier.background(DarkColors.background)) {
+            Row(modifier = Modifier.background(DarkColors.background)) {
                 Box(
                     modifier = Modifier
                         .background(DarkColors.primary)
                         .size(100.dp)
-                )
+                ) {
+                    Text(text = "Color [Dark] Blue / primary")
+                }
                 Box(
                     modifier = Modifier
                         .background(DarkColors.surface)
                         .size(100.dp)
-                )
+                ) {
+                    Text(text = "Color [Dark] Black / surface")
+                }
                 Box(
                     modifier = Modifier
                         .background(DarkColors.secondary)
                         .size(100.dp)
-                )
+                ) {
+                    Text(text = "Color [Dark] Brown / secondary")
+                }
+                Box(
+                        modifier = Modifier
+                            .background(DarkColors.error)
+                            .size(100.dp)
+                        ) {
+                    Text(text = "Color [Dark] Red / error")
+                }
             }
         }
     }
