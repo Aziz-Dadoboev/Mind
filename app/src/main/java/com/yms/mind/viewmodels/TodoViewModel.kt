@@ -6,7 +6,9 @@ import com.yms.mind.data.TodoItem
 import com.yms.mind.data.TodoItemsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class TodoViewModel: ViewModel() {
     private val repository = TodoItemsRepository()
@@ -17,6 +19,9 @@ class TodoViewModel: ViewModel() {
     // Отображаемый список
     private val _todoItems = MutableStateFlow<List<TodoItem>>(emptyList())
     val todoItems: StateFlow<List<TodoItem>> get() = _todoItems
+
+    private val _item = MutableStateFlow<TodoItem?>(null)
+    val item: StateFlow<TodoItem?> get() = _item.asStateFlow()
 
     private var todoItemsVisible: Boolean = true
 
@@ -54,8 +59,9 @@ class TodoViewModel: ViewModel() {
         updateVisibleItems()
     }
 
-    suspend fun generateId(): String {
-        return repository.generateId()
+    fun generateId(): String {
+//        return repository.generateId()
+        return UUID.randomUUID().toString()
     }
 
     fun addTodoItem(todoItem: TodoItem) {
@@ -63,6 +69,7 @@ class TodoViewModel: ViewModel() {
             repository.addTodoItem(todoItem)
             loadAllTodoItems()
         }
+        updateVisibleItems()
     }
 
     fun deleteItem(todoItemId: String) {
@@ -70,13 +77,15 @@ class TodoViewModel: ViewModel() {
             repository.deleteItem(todoItemId)
             loadAllTodoItems()
         }
+        updateVisibleItems()
     }
 
-//    suspend fun getItem(todoItemId: String): TodoItem? {
-//        return repository.getItem(todoItemId)
-//    }
+    suspend fun fetchItem(todoItemId: String): TodoItem? {
+        return repository.getItem(todoItemId)
+    }
 
     fun getCompletedTasksCount(): Int {
         return allTodoItems.value.count { it.status }
     }
+
 }

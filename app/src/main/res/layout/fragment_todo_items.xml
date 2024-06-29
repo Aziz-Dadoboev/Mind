@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@color/app_background"
-    tools:context=".fragments.TodoItemsFragment">
+    tools:context=".ui.fragments.TodoItemsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -64,6 +64,6 @@
         android:backgroundTint="@color/ic_add_bgcolor"
         android:layout_margin="16dp"
         android:layout_gravity="end|bottom"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/create_new_task" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

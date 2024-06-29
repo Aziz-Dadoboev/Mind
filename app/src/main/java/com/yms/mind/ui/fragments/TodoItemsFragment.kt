@@ -1,4 +1,4 @@
-package com.yms.mind.fragments
+package com.yms.mind.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,6 +35,7 @@ class TodoItemsFragment : Fragment() {
     private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
     private var isVisible = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
@@ -86,7 +87,14 @@ class TodoItemsFragment : Fragment() {
             },
             itemClickListener = object : OnItemClickListener {
                 override fun onItemClick(todoItem: TodoItem) {
-                    // TODO Перейти на экран редактирования
+                    val nextFrag = EditTodoItemFragment()
+                    val bundle = Bundle()
+                    bundle.putString("todoItemId", todoItem.id)
+                    nextFrag.arguments = bundle
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
         )
