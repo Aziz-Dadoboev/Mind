@@ -11,4 +11,10 @@
     <color name="ic_add_bgcolor">#007AFF</color>
     <color name="app_blue">#007AFF</color>
     <color name="app_red">#FF0000</color>
+    <color name="shape_color">#FFFFFF</color>
+    <color name="toolbar_title">#000000</color>
+    <color name="item_background">#FFFFFF</color>
+    <color name="date_color">#007AFF</color>
+    <color name="info_color">#000000</color>
+    <color name="checkbox_color">#000000</color>
 </resources>

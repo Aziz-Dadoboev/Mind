@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/item_background"
     android:layout_margin="2dp">
 
     <com.google.android.material.checkbox.MaterialCheckBox
@@ -36,6 +37,7 @@
         android:maxLines="3"
         android:maxLength="120"
         android:ellipsize="end"
+        android:textColor="@color/toolbar_title"
         app:layout_constraintStart_toEndOf="@+id/priority_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
@@ -48,6 +50,7 @@
         android:layout_marginStart="@dimen/item_date_text"
         android:layout_marginTop="@dimen/date_margin_top"
         tools:text="@string/demo_date_text"
+        android:textColor="@color/date_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox"/>
 
