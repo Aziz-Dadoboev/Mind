@@ -1,4 +1,4 @@
-package com.yms.mind.fragments
+package com.yms.mind.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -35,6 +36,7 @@ class TodoItemsFragment : Fragment() {
     private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
     private var isVisible = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
@@ -63,6 +65,17 @@ class TodoItemsFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoViewModel.errorMessages.collect { errorMessage ->
+                    errorMessage?.let {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        todoViewModel.clearErrorMessage()
+                    }
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -86,7 +99,14 @@ class TodoItemsFragment : Fragment() {
             },
             itemClickListener = object : OnItemClickListener {
                 override fun onItemClick(todoItem: TodoItem) {
-                    // TODO Перейти на экран редактирования
+                    val nextFrag = EditTodoItemFragment()
+                    val bundle = Bundle()
+                    bundle.putString("todoItemId", todoItem.id)
+                    nextFrag.arguments = bundle
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
         )

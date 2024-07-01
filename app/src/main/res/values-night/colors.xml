@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_add_bgcolor">#007AFF</color>
+    <color name="app_background">#1F1B16</color>
+    <color name="shape_color">#000000</color>
+    <color name="toolbar_title">#FFFFFF</color>
+    <color name="item_background">#000000</color>
+    <color name="info_color">#FFFFFF</color>
+    <color name="checkbox_color">#FFFFFF</color>
 </resources>
