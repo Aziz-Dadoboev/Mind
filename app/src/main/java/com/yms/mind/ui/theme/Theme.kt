@@ -1,23 +1,10 @@
 package com.yms.mind.ui.theme
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 
 
 private val LightColors = lightColorScheme(
@@ -52,7 +39,6 @@ private val LightColors = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -85,36 +71,36 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Light Mode Preview"
-)
-@Preview(
-    showBackground = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode Preview"
-)
-
-@Composable
-fun AppThemePreview(
-    @PreviewParameter(BoolParameterProvider::class) useDarkTheme: Boolean
-) {
-    AppTheme(useDarkTheme = useDarkTheme) {
-        Surface {
-            Text(
-                text = "Preview Text",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-    }
-}
+//@Preview(
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_YES,
+//    name = "Light Mode Preview"
+//)
+//@Preview(
+//    showBackground = false,
+//    uiMode = Configuration.UI_MODE_NIGHT_YES,
+//    name = "Dark Mode Preview"
+//)
+//
+//@Composable
+//fun AppThemePreview(
+//    @PreviewParameter(BoolParameterProvider::class) useDarkTheme: Boolean
+//) {
+//    AppTheme(useDarkTheme = useDarkTheme) {
+//        Surface {
+//            Text(
+//                text = "Preview Text",
+//                style = MaterialTheme.typography.bodyMedium,
+//                modifier = Modifier.padding(16.dp)
+//            )
+//        }
+//    }
+//}
 
 @Composable
 fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
         LightColors
@@ -127,99 +113,99 @@ fun AppTheme(
         content = content
     )
 }
+//
+//class BoolParameterProvider : PreviewParameterProvider<Boolean> {
+//    override val values: Sequence<Boolean> = sequenceOf(true, false)
+//}
 
-class BoolParameterProvider : PreviewParameterProvider<Boolean> {
-    override val values: Sequence<Boolean> = sequenceOf(true, false)
-}
-
-
-@Preview(
-    showBackground = true,
-    name = "Light Theme Colors Preview",
-    uiMode = Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-fun LightThemePreview(
-    @PreviewParameter(BoolParameterProvider::class) useDarkTheme: Boolean
-) {
-    AppTheme(useDarkTheme = false) {
-        Surface {
-
-            Row(modifier = Modifier.background(LightColors.background)) {
-                Box(
-                    modifier = Modifier
-                        .background(LightColors.primary)
-                        .size(100.dp)
-                )  {
-                    Text(text = "Color [Light] Blue / Primary")
-                }
-                Box(
-                    modifier = Modifier
-                        .background(LightColors.surface)
-                        .size(100.dp)
-                ) {
-                    Text(text = "Color [Light] White / Surface")
-                }
-                Box(
-                    modifier = Modifier
-                        .background(LightColors.secondary)
-                        .size(100.dp)
-                ) {
-                    Text(text = "Color [Light] Brown / Secondary")
-                }
-                Box(
-                    modifier = Modifier
-                        .background(LightColors.error)
-                        .size(100.dp)
-                ) {
-                    Text(text = "Color [Dark] Red / error")
-                }
-            }
-        }
-    }
-}
-
-@Preview(
-    showBackground = true,
-    name = "Dark Theme Colors Preview",
-    uiMode = Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-fun DarkThemePreview(
-    @PreviewParameter(BoolParameterProvider::class) useDarkTheme: Boolean
-) {
-    AppTheme(useDarkTheme = true) {
-        Surface {
-            Row(modifier = Modifier.background(DarkColors.background)) {
-                Box(
-                    modifier = Modifier
-                        .background(DarkColors.primary)
-                        .size(100.dp)
-                ) {
-                    Text(text = "Color [Dark] Blue / primary")
-                }
-                Box(
-                    modifier = Modifier
-                        .background(DarkColors.surface)
-                        .size(100.dp)
-                ) {
-                    Text(text = "Color [Dark] Black / surface")
-                }
-                Box(
-                    modifier = Modifier
-                        .background(DarkColors.secondary)
-                        .size(100.dp)
-                ) {
-                    Text(text = "Color [Dark] Brown / secondary")
-                }
-                Box(
-                        modifier = Modifier
-                            .background(DarkColors.error)
-                            .size(100.dp)
-                        ) {
-                    Text(text = "Color [Dark] Red / error")
-                }
-            }
-        }
-    }
-}
+//
+//@Preview(
+//    showBackground = true,
+//    name = "Light Theme Colors Preview",
+//    uiMode = Configuration.UI_MODE_TYPE_NORMAL
+//)
+//@Composable
+//fun LightThemePreview(
+//    @PreviewParameter(BoolParameterProvider::class) useDarkTheme: Boolean
+//) {
+//    AppTheme(useDarkTheme = false) {
+//        Surface {
+//
+//            Row(modifier = Modifier.background(LightColors.background)) {
+//                Box(
+//                    modifier = Modifier
+//                        .background(LightColors.primary)
+//                        .size(100.dp)
+//                )  {
+//                    Text(text = "Color [Light] Blue / Primary")
+//                }
+//                Box(
+//                    modifier = Modifier
+//                        .background(LightColors.surface)
+//                        .size(100.dp)
+//                ) {
+//                    Text(text = "Color [Light] White / Surface")
+//                }
+//                Box(
+//                    modifier = Modifier
+//                        .background(LightColors.secondary)
+//                        .size(100.dp)
+//                ) {
+//                    Text(text = "Color [Light] Brown / Secondary")
+//                }
+//                Box(
+//                    modifier = Modifier
+//                        .background(LightColors.error)
+//                        .size(100.dp)
+//                ) {
+//                    Text(text = "Color [Dark] Red / error")
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    name = "Dark Theme Colors Preview",
+//    uiMode = Configuration.UI_MODE_TYPE_NORMAL
+//)
+//@Composable
+//fun DarkThemePreview(
+//    @PreviewParameter(BoolParameterProvider::class) useDarkTheme: Boolean
+//) {
+//    AppTheme(useDarkTheme = true) {
+//        Surface {
+//            Row(modifier = Modifier.background(DarkColors.background)) {
+//                Box(
+//                    modifier = Modifier
+//                        .background(DarkColors.primary)
+//                        .size(100.dp)
+//                ) {
+//                    Text(text = "Color [Dark] Blue / primary")
+//                }
+//                Box(
+//                    modifier = Modifier
+//                        .background(DarkColors.surface)
+//                        .size(100.dp)
+//                ) {
+//                    Text(text = "Color [Dark] Black / surface")
+//                }
+//                Box(
+//                    modifier = Modifier
+//                        .background(DarkColors.secondary)
+//                        .size(100.dp)
+//                ) {
+//                    Text(text = "Color [Dark] Brown / secondary")
+//                }
+//                Box(
+//                        modifier = Modifier
+//                            .background(DarkColors.error)
+//                            .size(100.dp)
+//                        ) {
+//                    Text(text = "Color [Dark] Red / error")
+//                }
+//            }
+//        }
+//    }
+//}

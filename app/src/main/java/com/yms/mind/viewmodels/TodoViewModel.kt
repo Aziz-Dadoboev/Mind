@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yms.mind.data.TodoItem
 import com.yms.mind.data.TodoItemsRepository
+import com.yms.mind.data.toApi
+import com.yms.mind.network.TOKEN
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -34,6 +36,7 @@ class TodoViewModel: ViewModel() {
     val errorMessages: StateFlow<String?> get() = _errorMessages
 
     private var todoItemsVisible: Boolean = true
+    private var revision: Int = 0
 
     init {
         loadAllTodoItems()
@@ -41,9 +44,12 @@ class TodoViewModel: ViewModel() {
     }
 
     private fun loadAllTodoItems() {
-        customScope.launch {
+        viewModelScope.launch {
             try {
-                _allTodoItems.value = withContext(Dispatchers.IO) { repository.getTodoItems() }
+                val tasks = repository.getTasks(TOKEN)
+                Log.d("TodoViewModel", "Loaded tasks: ${tasks?.size ?: 0}")
+                tasks?.forEach { Log.d("TodoViewModel", "Task: $it") }
+                _allTodoItems.value = tasks ?: emptyList()
                 updateVisibleItems()
             } catch (e: Exception) {
                 handleError(e)
@@ -109,7 +115,6 @@ class TodoViewModel: ViewModel() {
         }
     }
 
-    // TODO Его идеи... Нужно придумать как это исправить
     suspend fun fetchItem(todoItemId: String): TodoItem? {
         return try {
             withContext(Dispatchers.Main) {
@@ -138,4 +143,81 @@ class TodoViewModel: ViewModel() {
     fun clearErrorMessage() {
         _errorMessages.value = null
     }
+
+    fun updateTasks() {
+        viewModelScope.launch {
+            try {
+                val updatedTasks = repository.updateTasks(TOKEN, revision, _allTodoItems.value)
+                Log.d("TodoViewModel", "Updated tasks: ${updatedTasks?.size ?: 0}")
+                updatedTasks?.forEach { Log.d("TodoViewModel", "Task: $it") }
+                _allTodoItems.value = updatedTasks ?: emptyList()
+                updateVisibleItems()
+            } catch (e: Exception) {
+                handleError(e)
+            }
+        }
+    }
+
+    fun getTask(id: String) {
+        viewModelScope.launch {
+            try {
+                val token = "your_token_here"
+                val task = repository.getTask(token, id)
+                Log.d("TodoViewModel", "Fetched task: $task")
+                _item.value = task
+            } catch (e: Exception) {
+                handleError(e)
+            }
+        }
+    }
+
+    fun addTask(task: TodoItem) {
+        viewModelScope.launch {
+            try {
+                val taskApi = task.toApi()
+                val addedTask = repository.addTask(TOKEN, taskApi)
+                if (addedTask != null) {
+                    repository.setCurrentRevision(repository.getCurrentRevision() + 1)
+                    loadAllTodoItems()
+                } else {
+                    Log.e("TodoViewModel", "Error adding task")
+                }
+            } catch (e: Exception) {
+                Log.e("TodoViewModel", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    fun updateTask(id: String, task: TodoItem) {
+        viewModelScope.launch {
+            try {
+                val updatedTask = repository.updateTask(TOKEN, revision, id, task)
+                Log.d("TodoViewModel", "Updated task: $updatedTask")
+                if (updatedTask != null) {
+                    _allTodoItems.value = _allTodoItems.value.map {
+                        if (it.id == id) updatedTask else it
+                    }
+                    updateVisibleItems()
+                }
+            } catch (e: Exception) {
+                handleError(e)
+            }
+        }
+    }
+
+    fun deleteTask(id: String) {
+        viewModelScope.launch {
+            try {
+                val deletedTask = repository.deleteTask(TOKEN, id)
+                Log.d("TodoViewModel", "Deleted task: $deletedTask")
+                if (deletedTask != null) {
+                    _allTodoItems.value = _allTodoItems.value.filter { it.id != id }
+                    updateVisibleItems()
+                }
+            } catch (e: Exception) {
+                handleError(e)
+            }
+        }
+    }
+
 }

@@ -51,10 +51,22 @@ import com.yms.mind.data.TodoItem
 import com.yms.mind.ui.theme.AppTheme
 import com.yms.mind.viewmodels.TodoViewModel
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+fun getCurrentDateAsLong(): Long {
+    return Calendar.getInstance().timeInMillis
+}
+
+fun getCurrentDateAsString(): String {
+    val currentDateTime = Instant.now().atZone(ZoneId.systemDefault()).toLocalDateTime()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return currentDateTime.format(formatter)
+}
 
 @Composable
 fun EditItemScreen(
@@ -62,26 +74,21 @@ fun EditItemScreen(
     item: TodoItem?,
     onNavigationClick: () -> Unit
 ) {
-    val calendar = Calendar.getInstance()
-    val currentDate = "${calendar.get(Calendar.YEAR)}-" +
-            "${calendar.get(Calendar.MONTH) + 1}-" +
-            "${calendar.get(Calendar.DATE)}"
-
-
+    val currentDate = getCurrentDateAsLong()
     val todoTextState = remember { mutableStateOf(item?.text ?: "") }
     val todoDeadlineState = remember { mutableStateOf(item?.deadline) }
     val todoPriorityState = remember { mutableStateOf(item?.priority ?: Priority.NORMAL) }
 
     val onSaveClick: () -> Unit = {
-        viewModel.addTodoItem(
+        viewModel.addTask(
             TodoItem(
                 id = item?.id ?: viewModel.generateId(),
                 text = todoTextState.value,
                 priority = todoPriorityState.value,
                 deadline = todoDeadlineState.value,
                 status = false,
-                creationDate = currentDate,
-                modificationDate = currentDate
+                creationDate = currentDate.toString(),
+                modificationDate = currentDate.toString()
             )
         )
         onNavigationClick()
@@ -108,7 +115,6 @@ fun EditItemScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 private fun Screen(
     text: String = "",
     priority: Priority = Priority.HIGH,
