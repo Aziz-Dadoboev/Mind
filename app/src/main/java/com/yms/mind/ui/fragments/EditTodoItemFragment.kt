@@ -1,34 +1,37 @@
 package com.yms.mind.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.yms.mind.data.TodoItem
+import com.yms.mind.MindApp
 import com.yms.mind.ui.screens.EditItemScreen
 import com.yms.mind.ui.theme.AppTheme
-import com.yms.mind.viewmodels.TodoViewModel
+import com.yms.mind.viewmodels.EditViewModel
+import com.yms.mind.viewmodels.ViewModelFactory
 import kotlinx.coroutines.launch
 
 
 class EditTodoItemFragment : Fragment() {
 
     private lateinit var composeView: ComposeView
-    private lateinit var todoViewModel: TodoViewModel
-    private var todoItem: TodoItem? = null
+    private val todoViewModel: EditViewModel by viewModels {
+        ViewModelFactory(
+            (requireActivity().application as MindApp).todoItemsRepository
+        )
+    }
     private var todoItemId: String? = null
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
-        todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
         arguments?.getString("todoItemId")?.let {
             todoItemId = it
         }
@@ -41,7 +44,8 @@ class EditTodoItemFragment : Fragment() {
         if (todoItemId != null) {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    todoItem = todoViewModel.fetchItem(todoItemId!!)!!
+                    todoViewModel.setTodoItem(todoItemId)
+                    Log.d("TODO", "fetch item")
                 }
             }
         }
@@ -54,21 +58,21 @@ class EditTodoItemFragment : Fragment() {
             AppTheme {
                 EditItemScreen(
                     viewModel = todoViewModel,
-                    item = todoItem,
+                    item = todoViewModel.todoItem,
                     onNavigationClick = { requireActivity().supportFragmentManager.popBackStack() }
                 )
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                todoViewModel.errorMessages.collect { errorMessage ->
-                    errorMessage?.let {
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                        todoViewModel.clearErrorMessage()
-                    }
-                }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                todoViewModel.errorMessages.collect { errorMessage ->
+//                    errorMessage?.let {
+//                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+//                        todoViewModel.clearErrorMessage()
+//                    }
+//                }
+//            }
+//        }
     }
 }

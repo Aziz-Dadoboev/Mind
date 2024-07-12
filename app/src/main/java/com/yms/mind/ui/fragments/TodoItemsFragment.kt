@@ -13,33 +13,39 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.yms.mind.MindApp
 import com.yms.mind.R
 import com.yms.mind.adapters.OnCheckBoxListener
 import com.yms.mind.adapters.OnItemClickListener
 import com.yms.mind.adapters.TaskAdapter
-import com.yms.mind.data.TodoItem
+import com.yms.mind.data.model.TodoItem
 import com.yms.mind.databinding.FragmentTodoItemsBinding
 import com.yms.mind.viewmodels.TodoViewModel
+import com.yms.mind.viewmodels.ViewModelFactory
 import kotlinx.coroutines.launch
 
 
 class TodoItemsFragment : Fragment() {
 
-    private lateinit var todoViewModel: TodoViewModel
+    private val todoViewModel: TodoViewModel by viewModels {
+        ViewModelFactory(
+            (requireActivity().application as MindApp).todoItemsRepository
+        )
+    }
     private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
     private var isVisible = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        todoViewModel = ViewModelProvider(requireActivity())[TodoViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -58,7 +64,7 @@ class TodoItemsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                todoViewModel.todoItems.collect { tasks ->
+                todoViewModel.currentTasks.collect { tasks ->
                     adapter.submitList(tasks)
                     updateSubtitle()
                 }
@@ -93,7 +99,7 @@ class TodoItemsFragment : Fragment() {
         adapter = TaskAdapter(
             checkBoxClickListener = object : OnCheckBoxListener {
                 override fun onCheckBoxClicked(id: String, isChecked: Boolean) {
-                    todoViewModel.checkItem(id, isChecked)
+                    todoViewModel.changeTaskStatus(id)
                     updateSubtitle()
                 }
             },
@@ -133,7 +139,7 @@ class TodoItemsFragment : Fragment() {
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                todoViewModel.todoItems.collect { tasks ->
+                todoViewModel.currentTasks.collect { tasks ->
                     adapter.submitList(tasks)
                 }
             }
@@ -147,11 +153,16 @@ class TodoItemsFragment : Fragment() {
         } else {
             menuVisibilityItem.setIcon(R.drawable.ic_visibility_off)
         }
-        todoViewModel.setItemsVisible(isVisible)
+        todoViewModel.toggleShowCompletedTasks()
     }
 
     private fun updateSubtitle() {
-        val completedTasksCount = todoViewModel.getCompletedTasksCount()
-        subtitle.text = getString(R.string.subtitle, completedTasksCount)
+        lifecycleScope.launch {
+            todoViewModel.numberOfCompletedTasks.flowWithLifecycle(
+                lifecycle, Lifecycle.State.STARTED
+            ).collect { count ->
+                subtitle.text = getString(R.string.subtitle, count)
+            }
+        }
     }
 }
