@@ -1,7 +1,7 @@
 package com.yms.mind.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.yms.mind.data.TodoItem
+import com.yms.mind.data.model.TodoItem
 
 class TodoListDiffUtilCallback : DiffUtil.ItemCallback<TodoItem>() {
 

@@ -43,59 +43,44 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yms.mind.R
-import com.yms.mind.data.Priority
-import com.yms.mind.data.TodoItem
-import com.yms.mind.ui.theme.AppTheme
-import com.yms.mind.viewmodels.TodoViewModel
-import java.text.SimpleDateFormat
+import com.yms.mind.data.model.Priority
+import com.yms.mind.data.model.TodoItem
+import com.yms.mind.viewmodels.EditViewModel
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
-fun getCurrentDateAsLong(): Long {
-    return Calendar.getInstance().timeInMillis
-}
 
-fun getCurrentDateAsString(): String {
-    val currentDateTime = Instant.now().atZone(ZoneId.systemDefault()).toLocalDateTime()
+fun getLocalDateTimeAsString(dateTime: LocalDateTime): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    return currentDateTime.format(formatter)
+    return dateTime.format(formatter)
 }
 
 @Composable
 fun EditItemScreen(
-    viewModel: TodoViewModel,
+    viewModel: EditViewModel,
     item: TodoItem?,
     onNavigationClick: () -> Unit
 ) {
-    val currentDate = getCurrentDateAsLong()
     val todoTextState = remember { mutableStateOf(item?.text ?: "") }
     val todoDeadlineState = remember { mutableStateOf(item?.deadline) }
-    val todoPriorityState = remember { mutableStateOf(item?.priority ?: Priority.NORMAL) }
+    val todoPriorityState = remember { mutableStateOf(item?.priority ?: Priority.BASIC) }
 
     val onSaveClick: () -> Unit = {
-        viewModel.addTask(
-            TodoItem(
-                id = item?.id ?: viewModel.generateId(),
-                text = todoTextState.value,
-                priority = todoPriorityState.value,
-                deadline = todoDeadlineState.value,
-                status = false,
-                creationDate = currentDate.toString(),
-                modificationDate = currentDate.toString()
-            )
+        viewModel.saveTask(
+            idArg = item?.id,
+            text = todoTextState.value,
+            priority = todoPriorityState.value,
+            deadline = todoDeadlineState.value
         )
         onNavigationClick()
     }
 
     val onDeleteClick: () -> Unit = {
-        item?.id?.let { viewModel.deleteItem(it) }
+        item?.id?.let { viewModel.deleteTask(it) }
         onNavigationClick()
     }
 
@@ -118,7 +103,7 @@ fun EditItemScreen(
 private fun Screen(
     text: String = "",
     priority: Priority = Priority.HIGH,
-    deadline: String? = "",
+    deadline: LocalDateTime? = null,
     deleteEnabled: () -> Boolean = { true },
 
     onNavigateBackClick: () -> Unit = {},
@@ -126,7 +111,7 @@ private fun Screen(
     onDeleteClick: () -> Unit = {},
     onTextChange: (text: String) -> Unit = {},
     onImportanceChange: (importance: Priority) -> Unit = {},
-    onDeadlineChange: (deadline: String?) -> Unit = {},
+    onDeadlineChange: (deadline: LocalDateTime?) -> Unit = {},
 ) {
     var newText by remember { mutableStateOf(text) }
     var selectedDate by remember { mutableStateOf(deadline) }
@@ -201,7 +186,7 @@ private fun Screen(
                     Text(
                         text = when (selectedPriority) {
                             Priority.LOW -> stringResource(id = R.string.importance_low)
-                            Priority.NORMAL -> stringResource(id = R.string.importance_no)
+                            Priority.BASIC -> stringResource(id = R.string.importance_no)
                             Priority.HIGH -> stringResource(id = R.string.importance_high)
                         },
                         style = MaterialTheme.typography.labelMedium,
@@ -214,8 +199,8 @@ private fun Screen(
                     DropdownMenuItem(text = {
                         Text(text = stringResource(id = R.string.importance_no))
                     }, onClick = {
-                        onImportanceChange(Priority.NORMAL)
-                        selectedPriority = Priority.NORMAL
+                        onImportanceChange(Priority.BASIC)
+                        selectedPriority = Priority.BASIC
                         dropDownMenuVisible = false }
                     )
                     DropdownMenuItem(text = {
@@ -248,8 +233,9 @@ private fun Screen(
                             onClick = {
                                 val selected = datePickerState.selectedDateMillis
                                 selectedDate = selected?.let { millis ->
-                                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                                    sdf.format(Date(millis))
+                                    Instant.ofEpochMilli(millis)
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDateTime()
                                 }
                                 onDeadlineChange(selectedDate)
                                 datePickerVisible = false
@@ -269,6 +255,7 @@ private fun Screen(
             }
 
             Row {
+                val selectedDateString = selectedDate?.let { getLocalDateTimeAsString(it) }
                 Column(
                     Modifier
                         .clickable { datePickerVisible = true }
@@ -278,19 +265,19 @@ private fun Screen(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                     Text(
-                        text = if (!selectedDate.isNullOrBlank()) selectedDate!!
+                        text = if (!selectedDateString.isNullOrBlank()) selectedDateString
                                 else "",
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
                 Spacer(Modifier.weight(1f))
                 Switch(
-                    checked = !selectedDate.isNullOrBlank() || datePickerVisible,
+                    checked = !selectedDateString.isNullOrBlank() || datePickerVisible,
                     onCheckedChange = {
                         if (it) datePickerVisible = true
                         else {
-                            onDeadlineChange(null)
-                            selectedDate = ""
+                            onDeadlineChange(selectedDate)
+                            selectedDate = null
                             datePickerVisible = false
                         }
                     }
@@ -320,42 +307,42 @@ private fun Screen(
     }
 }
 
-@Composable
-@Preview(name = "Light Theme", showBackground = true)
-private fun EditItemScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
-        EditItemScreen(
-            viewModel = TodoViewModel(),
-            item = TodoItem(
-                id = "1",
-                text = "Preview Todo Item",
-                priority = Priority.NORMAL,
-                status = false,
-                deadline = "2024-07-01",
-                creationDate = "2024-07-01",
-                modificationDate = "2024-07-01"
-            ),
-            onNavigationClick = {}
-        )
-    }
-}
-
-@Composable
-@Preview(name = "Dark Theme", showBackground = true)
-private fun EditItemScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
-        EditItemScreen(
-            viewModel = TodoViewModel(),
-            item = TodoItem(
-                id = "1",
-                text = "Preview Todo Item",
-                priority = Priority.NORMAL,
-                status = false,
-                deadline = "2024-07-01",
-                creationDate = "2024-07-01",
-                modificationDate = "2024-07-01"
-            ),
-            onNavigationClick = {}
-        )
-    }
-}
+//@Composable
+//@Preview(name = "Light Theme", showBackground = true)
+//private fun EditItemScreenLightPreview() {
+//    AppTheme(useDarkTheme = false) {
+//        EditItemScreen(
+//            viewModel = TodoViewModel(),
+//            item = TodoItem(
+//                id = "1",
+//                text = "Preview  Item",
+//                priority = Priority.NORMAL,
+//                status = false,
+//                deadline = null,
+//                creationDate = LocalDateTime.now(),
+//                modificationDate = null
+//            ),
+//            onNavigationClick = {}
+//        )
+//    }
+//}
+//
+//@Composable
+//@Preview(name = "Dark Theme", showBackground = true)
+//private fun EditItemScreenDarkPreview() {
+//    AppTheme(useDarkTheme = true) {
+//        EditItemScreen(
+//            viewModel = TodoViewModel(),
+//            item = TodoItem(
+//                id = "1",
+//                text = "Preview Item",
+//                priority = Priority.NORMAL,
+//                status = false,
+//                deadline = "2024-07-01",
+//                creationDate = "2024-07-01",
+//                modificationDate = "2024-07-01"
+//            ),
+//            onNavigationClick = {}
+//        )
+//    }
+//}

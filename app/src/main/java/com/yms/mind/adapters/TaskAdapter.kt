@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.yms.mind.R
-import com.yms.mind.data.Priority
-import com.yms.mind.data.TodoItem
+import com.yms.mind.data.model.Priority
+import com.yms.mind.data.model.TodoItem
 import com.yms.mind.databinding.TodoItemBinding
+import java.time.format.DateTimeFormatter
+
+
 
 class TaskAdapter(
     private val checkBoxClickListener: OnCheckBoxListener,
@@ -52,7 +55,8 @@ class TaskAdapter(
 
                 // TodoItem deadline
                 if (task.deadline != null && !task.status) {
-                    dateText.text = task.deadline
+                    val formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy")
+                    dateText.text = task.deadline.format(formatter)
                 } else {
                     dateText.visibility = View.GONE
                 }
