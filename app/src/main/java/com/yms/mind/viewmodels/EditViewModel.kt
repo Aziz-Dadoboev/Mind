@@ -7,9 +7,10 @@ import com.yms.mind.data.model.TodoItem
 import com.yms.mind.data.repository.TodoItemsRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 
-class EditViewModel(
+class EditViewModel @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
 ) : ViewModel() {
 

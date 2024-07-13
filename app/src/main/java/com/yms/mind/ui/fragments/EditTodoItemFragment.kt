@@ -11,23 +11,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.yms.mind.MindApp
+import com.yms.mind.activities.MainActivity
 import com.yms.mind.ui.screens.EditItemScreen
 import com.yms.mind.ui.theme.AppTheme
 import com.yms.mind.viewmodels.EditViewModel
 import com.yms.mind.viewmodels.ViewModelFactory
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class EditTodoItemFragment : Fragment() {
 
     private lateinit var composeView: ComposeView
-    private val todoViewModel: EditViewModel by viewModels {
-        ViewModelFactory(
-            (requireActivity().application as MindApp).todoItemsRepository
-        )
-    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val todoViewModel: EditViewModel by viewModels { viewModelFactory }
+
     private var todoItemId: String? = null
+
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
@@ -41,6 +43,9 @@ class EditTodoItemFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (requireContext() as MainActivity).activityComponent.fragmentComponentFactory().create()
+            .inject(this)
+
         if (todoItemId != null) {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.CREATED) {

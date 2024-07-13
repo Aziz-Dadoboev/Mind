@@ -16,27 +16,12 @@ import kotlinx.coroutines.launch
 class TodoViewModel(
     private val repository: TodoItemsRepository
 ): ViewModel() {
-//    private val supervisorJob = SupervisorJob()
-//    private val customScope = CoroutineScope(supervisorJob + Dispatchers.Main)
-//
-//    private val _allTodoItems = MutableStateFlow<List<TodoItem>>(emptyList())
-//    private val allTodoItems: StateFlow<List<TodoItem>> get() = _allTodoItems
-//
-//    private val _todoItems = MutableStateFlow<List<TodoItem>>(emptyList())
-//    val todoItems: StateFlow<List<TodoItem>> get() = _todoItems
-//
-//    private val _item = MutableStateFlow<TodoItem?>(null)
-//    val item: StateFlow<TodoItem?> get() = _item.asStateFlow()
-//
+
     private val _errorMessages = MutableStateFlow<String?>(null)
     val errorMessages: StateFlow<String?> get() = _errorMessages
-//
-//    private var todoItemsVisible: Boolean = true
-//    private var revision: Int = 0
 
     init {
         loadAllTodoItems()
-//        _todoItems.value = _allTodoItems.value
     }
 
     private val _showCompletedTasks = MutableStateFlow(true)

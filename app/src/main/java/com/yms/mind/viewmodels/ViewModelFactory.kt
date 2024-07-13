@@ -3,8 +3,9 @@ package com.yms.mind.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.yms.mind.data.repository.TodoItemsRepository
+import javax.inject.Inject
 
-class ViewModelFactory(
+class ViewModelFactory @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
