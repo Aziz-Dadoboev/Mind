@@ -2,7 +2,10 @@ package com.yms.mind.di
 
 import android.app.Application
 import android.content.Context
-import com.yms.mind.MindApp
+import android.content.SharedPreferences
+import androidx.room.Room
+import com.yms.mind.data.database.TodoDatabase
+import com.yms.mind.data.database.dao.TodoItemDao
 import com.yms.mind.data.network.ApiService
 import com.yms.mind.data.network.RetrofitInstance
 import com.yms.mind.data.repository.TodoItemsRepository
@@ -16,9 +19,8 @@ import javax.inject.Singleton
 
 
 @Singleton
-@Component( modules = [AppModule::class, NetworkModule::class, RepositoryModule::class])
+@Component(modules = [AppModule::class, NetworkModule::class, RepositoryModule::class, DatabaseModule::class, SharedPreferencesModule::class])
 interface AppComponent {
-    fun inject(application: MindApp)
     fun activityComponentFactory(): ActivityComponent.Factory
 
     @Component.Factory
@@ -26,7 +28,6 @@ interface AppComponent {
         fun create(@BindsInstance application: Application): AppComponent
     }
 }
-
 
 
 @Module
@@ -53,12 +54,44 @@ object RepositoryModule {
     @Singleton
     fun provideTodoItemsRepository(
         todoApiService: ApiService,
-        applicationScope: CoroutineScope
+        todoItemDao: TodoItemDao,
+        applicationScope: CoroutineScope,
+        sharedPreferences: SharedPreferences
     ): TodoItemsRepository {
         return TodoItemsRepository(
             todoApiService,
             applicationScope,
-            Dispatchers.IO
+            Dispatchers.IO,
+            todoItemDao,
+            sharedPreferences,
         )
+    }
+}
+
+@Module
+object DatabaseModule {
+    @Provides
+    @Singleton
+    fun provideDatabase(context: Context): TodoDatabase {
+        return Room.databaseBuilder(
+            context = context,
+            klass = TodoDatabase::class.java,
+            name = "todo_database"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTodoItemDao(database: TodoDatabase): TodoItemDao {
+        return database.dao
+    }
+}
+
+@Module
+object SharedPreferencesModule {
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences("todo_app_prefs", Context.MODE_PRIVATE)
     }
 }

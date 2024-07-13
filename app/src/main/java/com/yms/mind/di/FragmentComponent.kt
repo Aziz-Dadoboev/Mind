@@ -26,7 +26,7 @@ class FragmentModule {
     @Provides
     @FragmentScope
     fun provideTodoViewModelFactory(
-        repository: TodoItemsRepository,
+        repository: TodoItemsRepository
     ): ViewModelFactory {
         return ViewModelFactory(repository)
     }

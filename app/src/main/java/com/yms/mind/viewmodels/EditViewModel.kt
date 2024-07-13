@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 
 class EditViewModel @Inject constructor(
-    private val todoItemsRepository: TodoItemsRepository
+    private val repository: TodoItemsRepository
 ) : ViewModel() {
 
     private var _todoItem: TodoItem? = null
@@ -20,16 +20,16 @@ class EditViewModel @Inject constructor(
     fun saveTask(idArg: String?, text: String, priority: Priority, deadline: LocalDateTime?) {
         viewModelScope.launch {
             if (idArg != null) {
-                todoItemsRepository.updateTask(idArg, text, priority, deadline)
+                repository.updateTask(idArg, text, priority, deadline)
             } else {
-                todoItemsRepository.addTask(text, priority, deadline)
+                repository.addTask(text, priority, deadline)
             }
         }
     }
 
     fun setTodoItem(idArg: String?) {
         _todoItem = if (idArg != null) {
-            todoItemsRepository.findTodoItemById(idArg)
+            repository.findTodoItemById(idArg)
         } else {
             null
         }
@@ -46,7 +46,7 @@ class EditViewModel @Inject constructor(
     fun deleteTask(idArg: String?) {
         viewModelScope.launch {
             if (idArg != null) {
-                todoItemsRepository.deleteTask(idArg)
+                repository.deleteTask(idArg)
             }
         }
     }
