@@ -102,7 +102,7 @@ fun EditItemScreen(
 @Composable
 private fun Screen(
     text: String = "",
-    priority: Priority = Priority.HIGH,
+    priority: Priority = Priority.IMPORTANT,
     deadline: LocalDateTime? = null,
     deleteEnabled: () -> Boolean = { true },
 
@@ -187,7 +187,7 @@ private fun Screen(
                         text = when (selectedPriority) {
                             Priority.LOW -> stringResource(id = R.string.importance_low)
                             Priority.BASIC -> stringResource(id = R.string.importance_no)
-                            Priority.HIGH -> stringResource(id = R.string.importance_high)
+                            Priority.IMPORTANT -> stringResource(id = R.string.importance_high)
                         },
                         style = MaterialTheme.typography.labelMedium,
                     )
@@ -213,8 +213,8 @@ private fun Screen(
                     DropdownMenuItem(text = {
                         Text(text = stringResource(id = R.string.importance_high))
                     }, onClick = {
-                        onImportanceChange(Priority.HIGH)
-                        selectedPriority = Priority.HIGH
+                        onImportanceChange(Priority.IMPORTANT)
+                        selectedPriority = Priority.IMPORTANT
                         dropDownMenuVisible = false }
                     )
                 }

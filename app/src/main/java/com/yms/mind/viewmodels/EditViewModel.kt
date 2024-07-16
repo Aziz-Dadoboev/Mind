@@ -7,10 +7,11 @@ import com.yms.mind.data.model.TodoItem
 import com.yms.mind.data.repository.TodoItemsRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 
-class EditViewModel(
-    private val todoItemsRepository: TodoItemsRepository
+class EditViewModel @Inject constructor(
+    private val repository: TodoItemsRepository
 ) : ViewModel() {
 
     private var _todoItem: TodoItem? = null
@@ -19,16 +20,16 @@ class EditViewModel(
     fun saveTask(idArg: String?, text: String, priority: Priority, deadline: LocalDateTime?) {
         viewModelScope.launch {
             if (idArg != null) {
-                todoItemsRepository.updateTask(idArg, text, priority, deadline)
+                repository.updateTask(idArg, text, priority, deadline)
             } else {
-                todoItemsRepository.addTask(text, priority, deadline)
+                repository.addTask(text, priority, deadline)
             }
         }
     }
 
     fun setTodoItem(idArg: String?) {
         _todoItem = if (idArg != null) {
-            todoItemsRepository.findTodoItemById(idArg)
+            repository.findTodoItemById(idArg)
         } else {
             null
         }
@@ -45,7 +46,7 @@ class EditViewModel(
     fun deleteTask(idArg: String?) {
         viewModelScope.launch {
             if (idArg != null) {
-                todoItemsRepository.deleteTask(idArg)
+                repository.deleteTask(idArg)
             }
         }
     }

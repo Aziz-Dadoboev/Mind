@@ -21,8 +21,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.yms.mind.MindApp
 import com.yms.mind.R
+import com.yms.mind.activities.MainActivity
 import com.yms.mind.adapters.OnCheckBoxListener
 import com.yms.mind.adapters.OnItemClickListener
 import com.yms.mind.adapters.TaskAdapter
@@ -31,28 +31,34 @@ import com.yms.mind.databinding.FragmentTodoItemsBinding
 import com.yms.mind.viewmodels.TodoViewModel
 import com.yms.mind.viewmodels.ViewModelFactory
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class TodoItemsFragment : Fragment() {
 
-    private val todoViewModel: TodoViewModel by viewModels {
-        ViewModelFactory(
-            (requireActivity().application as MindApp).todoItemsRepository
-        )
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val todoViewModel: TodoViewModel by viewModels { viewModelFactory }
     private lateinit var adapter: TaskAdapter
     private lateinit var subtitle: TextView
     private var isVisible = true
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var binding: FragmentTodoItemsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentTodoItemsBinding.inflate(inflater, container, false)
+        binding = FragmentTodoItemsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        (requireContext() as MainActivity).activityComponent.fragmentComponentFactory().create()
+            .inject(this)
+
         val toolbar = binding.toolbar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
@@ -82,7 +88,6 @@ class TodoItemsFragment : Fragment() {
             }
         }
 
-        return binding.root
     }
 
     private fun setupFab(fab: FloatingActionButton) {

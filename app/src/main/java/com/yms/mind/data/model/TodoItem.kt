@@ -23,13 +23,13 @@ Priority - модель хранения важности задачи
 enum class Priority {
     LOW,
     BASIC,
-    HIGH
+    IMPORTANT
 }
 
 fun fromStringToPriority(priority: String): Priority {
     return when(priority) {
         "low" -> Priority.LOW
-        "high" -> Priority.HIGH
+        "high" -> Priority.IMPORTANT
         else -> Priority.BASIC
     }
 }

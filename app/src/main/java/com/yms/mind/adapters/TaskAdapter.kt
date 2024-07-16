@@ -78,7 +78,7 @@ class TaskAdapter(
             priorityIcon: ImageView
         ) {
             when (task.priority) {
-                Priority.HIGH -> {
+                Priority.IMPORTANT -> {
                     priorityIcon.setImageResource(R.drawable.ic_priority_high)
                     priorityIcon.visibility = View.VISIBLE
                 }
@@ -106,7 +106,7 @@ class TaskAdapter(
                     setupPriorityIcon(task, priorityIcon)
                 }
             }
-            checkBox.buttonIconDrawable = if (!task.status && task.priority == Priority.HIGH) {
+            checkBox.buttonIconDrawable = if (!task.status && task.priority == Priority.IMPORTANT) {
                 ContextCompat.getDrawable(checkBox.context, R.drawable.ic_unchecked_red)
             } else if (!task.status) {
                 ContextCompat.getDrawable(checkBox.context, R.drawable.ic_unchecked)
