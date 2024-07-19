@@ -34,6 +34,7 @@ class TodoItemsRepository(
     private val _todoItems = MutableStateFlow<List<TodoItem>>(emptyList())
     val todoItems: StateFlow<List<TodoItem>> = _todoItems
     private val _currentRevision = MutableStateFlow(sharedPreferences.getInt("revision", 0))
+    private val coroutineContext = coroutineScope.coroutineContext + ioDispatcher
 
     val numCompletedTodoItems: StateFlow<Int> =
         _todoItems.map { items -> items.count { it.status } }
@@ -77,7 +78,7 @@ class TodoItemsRepository(
     }
 
     suspend fun getTasks() {
-        withContext(coroutineScope.coroutineContext + ioDispatcher) {
+        withContext(coroutineContext) {
             _todoItems.value = todoItemDao.getTodoItems().map { it.toDomainModel() }
             val response = todoApiService.getTodoList()
             if (_todoItems.value.isNotEmpty() && _currentRevision.value == response.revision) {
@@ -100,7 +101,7 @@ class TodoItemsRepository(
     }
 
     private suspend fun updateDataBase(newList: List<TodoItem>) {
-        withContext(coroutineScope.coroutineContext + ioDispatcher) {
+        withContext(coroutineContext) {
             todoItemDao.deleteAll()
             todoItemDao.insertTodoItems(newList.map { it.toEntity() })
         }
@@ -111,7 +112,7 @@ class TodoItemsRepository(
         priority: Priority,
         deadline: LocalDateTime?
     ) {
-        withContext(coroutineScope.coroutineContext + ioDispatcher) {
+        withContext(coroutineContext) {
             val newTask = TodoItem(
                 id = UUID.randomUUID().toString(),
                 text = taskText,
@@ -139,7 +140,7 @@ class TodoItemsRepository(
         importance: Priority,
         deadline: LocalDateTime?
     ) {
-        withContext(coroutineScope.coroutineContext + ioDispatcher) {
+        withContext(coroutineContext) {
             var newTask: TodoItem? = null
             val updatedList = _todoItems.value.map { item ->
                 if (item.id == taskId) {
@@ -172,7 +173,7 @@ class TodoItemsRepository(
     suspend fun deleteTask(
         id: String
     ) {
-        withContext(coroutineScope.coroutineContext + ioDispatcher) {
+        withContext(coroutineContext) {
             val task = _todoItems.value.find { it.id == id }
             task?.let {
                 val updatedList = _todoItems.value.filter { it.id != id }
@@ -190,7 +191,7 @@ class TodoItemsRepository(
     }
 
     suspend fun changeTodoItemStatus(todoId: String) {
-        withContext(coroutineScope.coroutineContext + ioDispatcher) {
+        withContext(coroutineContext) {
             var newTask: TodoItem? = null
             val updatedList = _todoItems.value.map { item ->
                 if (item.id == todoId) {
