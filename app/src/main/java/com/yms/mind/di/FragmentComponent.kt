@@ -2,6 +2,7 @@ package com.yms.mind.di
 
 import com.yms.mind.data.repository.TodoItemsRepository
 import com.yms.mind.ui.fragments.EditTodoItemFragment
+import com.yms.mind.ui.fragments.SettingsFragment
 import com.yms.mind.ui.fragments.TodoItemsFragment
 import com.yms.mind.viewmodels.ViewModelFactory
 import dagger.Module
@@ -14,6 +15,7 @@ import dagger.Subcomponent
 interface FragmentComponent {
     fun inject(fragment: TodoItemsFragment)
     fun inject(fragment: EditTodoItemFragment)
+    fun inject(fragment: SettingsFragment)
 
     @Subcomponent.Factory
     interface Factory {

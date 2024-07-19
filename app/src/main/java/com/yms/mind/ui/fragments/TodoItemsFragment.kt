@@ -162,7 +162,7 @@ class TodoItemsFragment : Fragment() {
     }
 
     private fun openSettings() {
-        val nextFrag = EditTodoItemFragment()
+        val nextFrag = SettingsFragment()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
             .addToBackStack(null)
