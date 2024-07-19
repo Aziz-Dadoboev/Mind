@@ -132,7 +132,8 @@ private fun Screen(
                     TextButton(onClick = onSaveClick) {
                         Text(
                             text = stringResource(id = R.string.save).uppercase(),
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -169,6 +170,7 @@ private fun Screen(
                         .fillMaxWidth()
                         .heightIn(min = 100.dp),
                     placeholder = { Text(stringResource(id = R.string.edit_todo_hint)) },
+                    textStyle = MaterialTheme.typography.bodyMedium
                 )
             }
             Spacer(Modifier.height(16.dp))
@@ -181,7 +183,7 @@ private fun Screen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.importance),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         text = when (selectedPriority) {
@@ -197,21 +199,30 @@ private fun Screen(
                     onDismissRequest = { dropDownMenuVisible = false }
                 ) {
                     DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.importance_no))
+                        Text(
+                            text = stringResource(id = R.string.importance_no),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }, onClick = {
                         onImportanceChange(Priority.BASIC)
                         selectedPriority = Priority.BASIC
                         dropDownMenuVisible = false }
                     )
                     DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.importance_low))
+                        Text(
+                            text = stringResource(id = R.string.importance_low),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }, onClick = {
                         onImportanceChange(Priority.LOW)
                         selectedPriority = Priority.LOW
                         dropDownMenuVisible = false }
                     )
                     DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.importance_high))
+                        Text(
+                            text = stringResource(id = R.string.importance_high),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }, onClick = {
                         onImportanceChange(Priority.IMPORTANT)
                         selectedPriority = Priority.IMPORTANT
@@ -241,12 +252,18 @@ private fun Screen(
                                 datePickerVisible = false
                             }
                         ) {
-                            Text(text = stringResource(id = R.string.apply))
+                            Text(
+                                text = stringResource(id = R.string.apply),
+                                style = MaterialTheme.typography.labelMedium
+                            )
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { datePickerVisible = false }) {
-                            Text(text = stringResource(id = R.string.cancel))
+                            Text(
+                                text = stringResource(id = R.string.cancel),
+                                style = MaterialTheme.typography.labelMedium
+                            )
                         }
                     }
                 ) {
@@ -297,7 +314,8 @@ private fun Screen(
                     Spacer(Modifier.width(12.dp))
                     Text(text = stringResource(
                         id = R.string.delete),
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
