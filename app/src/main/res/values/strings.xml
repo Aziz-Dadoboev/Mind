@@ -22,4 +22,6 @@
     <string name="create_new_task">Добавить новое дело</string>
     <string name="importance_icon_desc">Иконка важности дела</string>
     <string name="icon_info_desc">Информация о деле</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О приложении</string>
 </resources>

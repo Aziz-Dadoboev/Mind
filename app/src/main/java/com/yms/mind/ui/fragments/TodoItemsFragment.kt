@@ -137,18 +137,18 @@ class TodoItemsFragment : Fragment() {
                         toggleVisibility(menuItem)
                         true
                     }
+                    R.id.settings -> {
+                        openSettings()
+                        true
+                    }
+                    R.id.about -> {
+                        openAbout()
+                        true
+                    }
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                todoViewModel.currentTasks.collect { tasks ->
-                    adapter.submitList(tasks)
-                }
-            }
-        }
     }
 
     private fun toggleVisibility(menuVisibilityItem: MenuItem) {
@@ -159,6 +159,22 @@ class TodoItemsFragment : Fragment() {
             menuVisibilityItem.setIcon(R.drawable.ic_visibility_off)
         }
         todoViewModel.toggleShowCompletedTasks()
+    }
+
+    private fun openSettings() {
+        val nextFrag = EditTodoItemFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun openAbout() {
+        val nextFrag = EditTodoItemFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, nextFrag, "findTodoItemsFragment")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun updateSubtitle() {
