@@ -83,4 +83,11 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    // divkit
+    implementation 'com.yandex.div:div:30.9.0'
+    implementation 'com.yandex.div:div-core:30.9.0'
+    implementation 'com.yandex.div:div-json:30.9.0'
+    implementation 'com.yandex.div:picasso:30.9.0'
+    implementation 'com.yandex.div:glide:30.9.0'
 }

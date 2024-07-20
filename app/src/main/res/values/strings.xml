@@ -28,4 +28,5 @@
     <string name="always_light">Всегда светлая</string>
     <string name="always_dark">Всегда тёмная</string>
     <string name="system">Как в системе</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
