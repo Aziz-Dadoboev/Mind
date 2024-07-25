@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BaseText" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.0</item>
+    </style>
+
+    <style name="H2" parent="BaseText">
+        <item name="android:textSize">@dimen/todo_item_text_size</item>
+        <item name="android:textColor">@color/toolbar_title</item>
+        <item name="android:text">@string/demo_subtitle</item>
+        <item name="android:layout_marginStart">@dimen/title_margin_start</item>
+        <item name="android:layout_gravity">bottom</item>
+    </style>
+
+    <style name="Body" parent="BaseText">
+        <item name="android:textSize">@dimen/todo_item_text_size</item>
+        <item name="android:textColor">@color/toolbar_title</item>
+        <item name="android:text">@string/lorem</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLength">120</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="TextItemDate" parent="BaseText">
+        <item name="android:text">@string/demo_date_text</item>
+        <item name="android:textSize">@dimen/todo_item_date_text_size</item>
+        <item name="android:textColor">@color/date_color</item>
+        <item name="android:layout_marginTop">@dimen/date_margin_top</item>
+        <item name="android:layout_marginStart">@dimen/item_date_text</item>
+    </style>
+
+    <style name="SettingsH1">
+        <item name="android:text">@string/pick_theme</item>
+        <item name="android:textSize">@dimen/settings_h1_text_size</item>
+        <item name="android:textColor">@color/toolbar_title</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/title_margin_start</item>
+    </style>
+
+    <style name="CustomMaterialCheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:background">@drawable/ripple_effect</item>
+    </style>
+</resources>

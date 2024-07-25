@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/item_background"
     android:layout_margin="2dp">
 
@@ -12,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:checked="false"
+        style="@style/CustomMaterialCheckBox"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -19,7 +19,7 @@
         android:id="@+id/priority_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/importance_icon_desc"
         android:src="@drawable/ic_priority_high"
         android:layout_marginEnd="@dimen/date_margin_top"
         app:layout_constraintStart_toEndOf="@+id/checkBox"
@@ -31,13 +31,7 @@
         android:id="@+id/check_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/lorem"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/todo_item_text_size"
-        android:maxLines="3"
-        android:maxLength="120"
-        android:ellipsize="end"
-        android:textColor="@color/toolbar_title"
+        style="@style/Body"
         app:layout_constraintStart_toEndOf="@+id/priority_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
@@ -47,10 +41,7 @@
         android:id="@+id/date_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/item_date_text"
-        android:layout_marginTop="@dimen/date_margin_top"
-        tools:text="@string/demo_date_text"
-        android:textColor="@color/date_color"
+        style="@style/TextItemDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox"/>
 
@@ -63,5 +54,5 @@
         app:layout_constraintTop_toTopOf="@+id/checkBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_info"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/icon_info_desc" />
 </androidx.constraintlayout.widget.ConstraintLayout>

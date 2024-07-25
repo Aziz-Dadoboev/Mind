@@ -20,4 +20,13 @@
     <string name="apply">Применить</string>
     <string name="back_button">Вернуться назад</string>
     <string name="create_new_task">Добавить новое дело</string>
+    <string name="importance_icon_desc">Иконка важности дела</string>
+    <string name="icon_info_desc">Информация о деле</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О приложении</string>
+    <string name="pick_theme">Выберите тему</string>
+    <string name="always_light">Всегда светлая</string>
+    <string name="always_dark">Всегда тёмная</string>
+    <string name="system">Как в системе</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

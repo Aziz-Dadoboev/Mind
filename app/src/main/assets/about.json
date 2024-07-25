@@ -1,0 +1,265 @@
+{
+  "templates": {
+    "aboutCard": {
+      "type": "container",
+      "items": [
+        {
+          "type": "text",
+          "font_size": 21,
+          "font_weight": "bold",
+          "margins": {
+            "bottom": 16
+          },
+          "$text": "title",
+          "text_color": "@{dark_theme ? '@{primary_dark}' : '@{primary_light}'}"
+        },
+        {
+          "type": "text",
+          "font_size": 16,
+          "margins": {
+            "bottom": 16
+          },
+          "$text": "body",
+          "text_color": "@{dark_theme ? '@{primary_dark}' : '@{primary_light}'}"
+        },
+        {
+          "type": "container",
+          "$items": "links"
+        }
+      ],
+      "margins": {
+        "bottom": 6
+      },
+      "orientation": "vertical",
+      "paddings": {
+        "top": 10,
+        "bottom": 0,
+        "left": 30,
+        "right": 30
+      }
+    },
+    "link": {
+      "type": "text",
+      "action": {
+        "$url": "link",
+        "$log_id": "log"
+      },
+      "font_size": 14,
+      "margins": {
+        "bottom": 2
+      },
+      "text_color": "#0000ff",
+      "underline": "single",
+      "$text": "link_text"
+    }
+  },
+  "card": {
+    "log_id": "about_app_screen",
+    "variables": [
+      {
+        "name": "dark_theme",
+        "type": "boolean",
+        "value": false
+      },
+      {
+        "name": "primary_dark",
+        "type": "color",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "primary_light",
+        "type": "color",
+        "value": "#000000"
+      }
+    ],
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNhb96AHfa6uz8o4VsYnkkA37BE6nCSfXQ5A&s",
+              "margins": {
+                "top": 10,
+                "right": 60,
+                "bottom": 10,
+                "left": 60
+              }
+            },
+            {
+              "type": "aboutCard",
+              "title": "Mind",
+              "body": "Добро пожаловать в Mind!\n\nУстали забывать, что нужно сделать? Mind — ваш личный помощник для управления задачами. С ним ваши задачи всегда будут под рукой, а напоминания помогут не упустить ничего важного!\n\nПочему Mind?\n- 🧠 Потому что мы все иногда теряем голову!\n- 📅 Помнит все ваши задачи, даже если вы забываете.\n- ✅ Простой и интуитивно понятный интерфейс для планирования.\n\nБудьте продуктивны, не теряйтесь в рутине, и пусть Mind заботится о ваших задачах!"
+            },
+            {
+              "type": "text",
+              "text": "English",
+              "height": {
+                "type": "fixed",
+                "value": 48
+              },
+              "border": {
+                "corner_radius": 16
+              },
+              "background": [
+                {
+                  "type": "solid",
+                  "color": "#C8E9EE"
+                }
+              ],
+              "margins": {
+                "top": 20,
+                "left": 20,
+                "right": 20
+              },
+              "action_animation": {
+                "name": "fade"
+              },
+              "font_size": 14,
+              "text_alignment_vertical": "center",
+              "text_alignment_horizontal": "center",
+              "text_color": "#000000",
+              "actions": [
+                {
+                  "log_id": "to_english_state",
+                  "url": "div-action://set_state?state_id=1"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "Вернуться назад",
+              "height": {
+                "type": "fixed",
+                "value": 48
+              },
+              "border": {
+                "corner_radius": 16
+              },
+              "background": [
+                {
+                  "type": "solid",
+                  "color": "#0077FF"
+                }
+              ],
+              "margins": {
+                "top": 20,
+                "left": 20,
+                "right": 20
+              },
+              "action_animation": {
+                "name": "fade"
+              },
+              "font_size": 14,
+              "text_alignment_vertical": "center",
+              "text_alignment_horizontal": "center",
+              "text_color": "#ffffff",
+              "actions": [
+                {
+                  "log_id": "button_pressed",
+                  "url": "sample-action://back"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "state_id": 1,
+        "div": {
+          "type": "container",
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNhb96AHfa6uz8o4VsYnkkA37BE6nCSfXQ5A&s",
+              "margins": {
+                "top": 10,
+                "right": 60,
+                "bottom": 10,
+                "left": 60
+              }
+            },
+            {
+              "type": "aboutCard",
+              "title": "Mind",
+              "body": "Welcome to Mind!\n\nTired of forgetting what to do? Mind is your personal assistant for task management. With it, your tasks will always be at your fingertips, and reminders will keep you on track!\n\nWhy Mind?\n- 🧠 Because we all lose our minds sometimes!\n- 📅 Remembers all your tasks, even if you forget.\n- ✅ Simple and intuitive interface for planning.\n\nBe productive, don’t get lost in routine, and let Mind take care of your tasks!",
+              "links": []
+            },
+            {
+              "type": "text",
+              "text": "Русский",
+              "height": {
+                "type": "fixed",
+                "value": 48
+              },
+              "border": {
+                "corner_radius": 16
+              },
+              "background": [
+                {
+                  "type": "solid",
+                  "color": "#C8E9EE"
+                }
+              ],
+              "margins": {
+                "top": 20,
+                "left": 20,
+                "right": 20
+              },
+              "action_animation": {
+                "name": "fade"
+              },
+              "font_size": 14,
+              "text_alignment_vertical": "center",
+              "text_alignment_horizontal": "center",
+              "text_color": "#000000",
+              "actions": [
+                {
+                  "log_id": "to_english_state",
+                  "url": "div-action://set_state?state_id=0"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "Go back",
+              "height": {
+                "type": "fixed",
+                "value": 48
+              },
+              "border": {
+                "corner_radius": 16
+              },
+              "background": [
+                {
+                  "type": "solid",
+                  "color": "#0077FF"
+                }
+              ],
+              "margins": {
+                "top": 20,
+                "left": 20,
+                "right": 20
+              },
+              "action_animation": {
+                "name": "fade"
+              },
+              "font_size": 14,
+              "text_alignment_vertical": "center",
+              "text_alignment_horizontal": "center",
+              "text_color": "#ffffff",
+              "actions": [
+                {
+                  "log_id": "button_pressed",
+                  "url": "sample-action://back"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

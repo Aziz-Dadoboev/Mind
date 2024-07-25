@@ -1,5 +1,6 @@
 package com.yms.mind.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
@@ -42,6 +44,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.yms.mind.R
@@ -132,7 +135,8 @@ private fun Screen(
                     TextButton(onClick = onSaveClick) {
                         Text(
                             text = stringResource(id = R.string.save).uppercase(),
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -169,6 +173,7 @@ private fun Screen(
                         .fillMaxWidth()
                         .heightIn(min = 100.dp),
                     placeholder = { Text(stringResource(id = R.string.edit_todo_hint)) },
+                    textStyle = MaterialTheme.typography.bodyMedium
                 )
             }
             Spacer(Modifier.height(16.dp))
@@ -181,7 +186,7 @@ private fun Screen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.importance),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         text = when (selectedPriority) {
@@ -197,21 +202,30 @@ private fun Screen(
                     onDismissRequest = { dropDownMenuVisible = false }
                 ) {
                     DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.importance_no))
+                        Text(
+                            text = stringResource(id = R.string.importance_no),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }, onClick = {
                         onImportanceChange(Priority.BASIC)
                         selectedPriority = Priority.BASIC
                         dropDownMenuVisible = false }
                     )
                     DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.importance_low))
+                        Text(
+                            text = stringResource(id = R.string.importance_low),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }, onClick = {
                         onImportanceChange(Priority.LOW)
                         selectedPriority = Priority.LOW
                         dropDownMenuVisible = false }
                     )
                     DropdownMenuItem(text = {
-                        Text(text = stringResource(id = R.string.importance_high))
+                        Text(
+                            text = stringResource(id = R.string.importance_high),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }, onClick = {
                         onImportanceChange(Priority.IMPORTANT)
                         selectedPriority = Priority.IMPORTANT
@@ -241,12 +255,18 @@ private fun Screen(
                                 datePickerVisible = false
                             }
                         ) {
-                            Text(text = stringResource(id = R.string.apply))
+                            Text(
+                                text = stringResource(id = R.string.apply),
+                                style = MaterialTheme.typography.labelMedium
+                            )
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { datePickerVisible = false }) {
-                            Text(text = stringResource(id = R.string.cancel))
+                            Text(
+                                text = stringResource(id = R.string.cancel),
+                                style = MaterialTheme.typography.labelMedium
+                            )
                         }
                     }
                 ) {
@@ -284,20 +304,42 @@ private fun Screen(
                 )
             }
 
+            var clicked by remember { mutableStateOf(false) }
             if (deleteEnabled()) {
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider()
-                TextButton(onClick = onDeleteClick) {
+                TextButton(
+                    onClick = {
+                    clicked = !clicked
+                    onDeleteClick()
+                    },
+                    modifier = Modifier
+                        .background(
+                            if (clicked) MaterialTheme.colorScheme.onSecondary else Color.Transparent
+                        )
+                        .padding(8.dp),
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor =
+                            if (clicked) MaterialTheme.colorScheme.onSecondary
+                            else MaterialTheme.colorScheme.error
+                    ),
+                ) {
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.Rounded.Delete,
                         contentDescription = stringResource(id = R.string.delete),
-                        tint = MaterialTheme.colorScheme.error
+                        tint =
+                            if (clicked) MaterialTheme.colorScheme.onSecondary
+                            else MaterialTheme.colorScheme.error
                     )
                     Spacer(Modifier.width(12.dp))
                     Text(text = stringResource(
                         id = R.string.delete),
-                        color = MaterialTheme.colorScheme.error
+                        color =
+                            if (clicked) MaterialTheme.colorScheme.onSecondary
+                            else MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
