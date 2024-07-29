@@ -6,7 +6,7 @@
         android:id="@+id/visibility"
         android:icon="@drawable/ic_visibility"
         app:showAsAction="ifRoom"
-        android:title=""/>
+        android:title="@string/hide"/>
 
     <item
         android:id="@+id/settings"

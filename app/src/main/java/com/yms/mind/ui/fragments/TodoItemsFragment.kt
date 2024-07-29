@@ -155,8 +155,10 @@ class TodoItemsFragment : Fragment() {
         isVisible = !isVisible
         if (isVisible) {
             menuVisibilityItem.setIcon(R.drawable.ic_visibility)
+            menuVisibilityItem.setTitle(getString(R.string.hide))
         } else {
             menuVisibilityItem.setIcon(R.drawable.ic_visibility_off)
+            menuVisibilityItem.setTitle(getString(R.string.show))
         }
         todoViewModel.toggleShowCompletedTasks()
     }
